@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <title>DocumentChain - Верификация студенческих документов</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Шрифты -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .wallet-button {
+            transition: all 0.2s ease;
+        }
+
+        .wallet-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .document-card {
+            transition: all 0.2s ease;
+        }
+
+        .document-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .role-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .issuer-badge {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .verifier-badge {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        .owner-badge {
+            background-color: #ffedd5;
+            color: #c2410c;
+        }
+
+        .status-active {
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .status-revoked {
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+
+        .transaction-status {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+        }
+
+        .transaction-pending {
+            background-color: #fffbeb;
+            color: #d97706;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .transaction-success {
+            background-color: #f0fdf4;
+            color: #047857;
+            border-left: 4px solid #10b981;
+        }
+
+        .transaction-error {
+            background-color: #fef2f2;
+            color: #b91c1c;
+            border-left: 4px solid #ef4444;
+        }
+
+        .network-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .sepolia-badge {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .mainnet-badge {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .hash-display {
+            font-family: monospace;
+            word-break: break-all;
+            overflow-wrap: break-word;
+        }
+
+        .pdf-preview {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            padding: 1rem;
+        }
+
+        .role-section {
+            display: none;
+        }
+
+        .role-section.active {
+            display: block;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid #ffffff;
+            border-top-color: #1e293b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Светлая тема (по умолчанию) */
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --nav-bg: #ffffff;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Темная тема */
+        body.dark-mode {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --border-color: #334155;
+            --nav-bg: #1e293b;
+            --input-bg: #334155;
+            --input-border: #475569;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Навигация - темная тема */
+        nav {
+            background-color: var(--nav-bg);
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Инпуты и текстарии - темная тема */
+        input, textarea, select {
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            border-color: var(--input-border);
+        }
+
+        input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* Карточки */
+        .document-card {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+
+        /* Алерты */
+        .alert {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+
+        /* Бейджи - адаптация для темной темы */
+        body.dark-mode .sepolia-badge {
+            background-color: #082f49;
+            color: #06b6d4;
+        }
+
+        body.dark-mode .issuer-badge {
+            background-color: #082f49;
+            color: #06b6d4;
+        }
+
+        body.dark-mode .verifier-badge {
+            background-color: #092e20;
+            color: #10b981;
+        }
+
+        body.dark-mode .owner-badge {
+            background-color: #3f2817;
+            color: #fbbf24;
+        }
+
+        /* Таблицы */
+        table {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        body.dark-mode table thead {
+            background-color: var(--input-bg);
+            border-color: var(--border-color);
+        }
+
+        body.dark-mode table tbody tr {
+            border-color: var(--border-color);
+        }
+
+        body.dark-mode table tbody tr:hover {
+            background-color: var(--input-bg);
+        }
+
+        /* Алерты - темная тема */
+        body.dark-mode .bg-yellow-50 {
+            background-color: #78350f;
+        }
+
+        body.dark-mode .border-yellow-400 {
+            border-color: #fbbf24;
+        }
+
+        body.dark-mode .text-yellow-700 {
+            color: #fef3c7;
+        }
+
+        body.dark-mode .text-yellow-400 {
+            color: #fbbf24;
+        }
+
+        body.dark-mode .bg-blue-50 {
+            background-color: #082f49;
+        }
+
+        body.dark-mode .border-blue-400 {
+            border-color: #0ea5e9;
+        }
+
+        body.dark-mode .text-blue-700 {
+            color: #bae6fd;
+        }
+
+        body.dark-mode .bg-red-50 {
+            background-color: #7f1d1d;
+        }
+
+        body.dark-mode .border-red-400 {
+            border-color: #f87171;
+        }
+
+        body.dark-mode .text-red-700 {
+            color: #fca5a5;
+        }
+
+        body.dark-mode .bg-green-50 {
+            background-color: #051f15;
+        }
+
+        body.dark-mode .border-green-400 {
+            border-color: #4ade80;
+        }
+
+        body.dark-mode .text-green-700 {
+            color: #bbf7d0;
+        }
+
+        /* Навигационные элементы - темная тема */
+        body.dark-mode nav {
+            background-color: #1e293b;
+            border-bottom-color: #334155;
+        }
+
+        body.dark-mode .bg-white {
+            background-color: var(--bg-secondary);
+        }
+
+        body.dark-mode .text-gray-900 {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .text-gray-500 {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode .text-gray-700 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .text-gray-600 {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode .text-gray-800 {
+            color: #f1f5f9;
+        }
+
+        body.dark-mode .hover\:text-gray-700:hover {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .hover\:border-gray-300:hover {
+            border-color: #475569;
+        }
+
+        body.dark-mode .border-transparent {
+            border-color: transparent;
+        }
+
+        body.dark-mode .bg-gray-50 {
+            background-color: #334155;
+        }
+
+        body.dark-mode .hover\:bg-gray-50:hover {
+            background-color: #334155;
+        }
+
+        body.dark-mode .border-gray-200 {
+            border-color: #334155;
+        }
+
+        body.dark-mode .shadow-sm {
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode .font-bold {
+            color: #f1f5f9;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <!-- Навигационная панель -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span class="ml-2 text-xl font-bold text-gray-900">DocumentChain</span>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="#/issue"
+                            class="nav-link border-primary text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Для эмитента
+                        </a>
+                        <a href="#/verify"
+                            class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Для верификатора
+                        </a>
+                        <a href="#/admin"
+                            class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Администрирование
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="hidden md:ml-4 md:flex items-center md:space-x-3">
+                        <div id="network-status" class="network-badge sepolia-badge">
+                            Sepolia Testnet
+                        </div>
+                        <div id="wallet-status" class="hidden">
+                            <div class="flex items-center space-x-2">
+                                <div class="text-sm">
+                                    <span id="wallet-address" class="font-mono">0x...</span>
+                                </div>
+                                <button id="disconnect-wallet" class="text-gray-400 hover:text-gray-500">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <button id="connect-wallet"
+                            class="wallet-button bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                            Подключить кошелек
+                        </button>
+                        <button id="theme-toggle" title="Переключить тему" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 p-2 rounded-lg transition-colors">
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1m-16 0H1m15.364 1.636l.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="md:hidden flex items-center">
+                        <button id="mobile-menu-button"
+                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
+                            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Мобильное меню -->
+        <div id="mobile-menu" class="md:hidden hidden">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="#/issue"
+                    class="nav-link bg-blue-50 border-primary text-primary block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Для
+                    эмитента</a>
+                <a href="#/verify"
+                    class="nav-link border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Для
+                    верификатора</a>
+                <a href="#/admin"
+                    class="nav-link border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Администрирование</a>
+            </div>
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="flex items-center justify-between px-4">
+                    <div id="mobile-network-status" class="network-badge sepolia-badge">
+                        Sepolia Testnet
+                    </div>
+                    <button id="mobile-theme-toggle" title="Переключить тему" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 p-2 rounded-lg transition-colors">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1m-16 0H1m15.364 1.636l.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="mt-3 space-y-1" id="mobile-wallet-section">
+                    <div id="mobile-wallet-status" class="hidden px-4">
+                        <div class="flex items-center space-x-2">
+                            <div class="text-sm">
+                                <span id="mobile-wallet-address" class="font-mono">0x...</span>
+                            </div>
+                            <button id="mobile-disconnect-wallet" class="text-gray-400 hover:text-gray-500">
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="mobile-connect-wallet"
+                        class="wallet-button w-full bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                        Подключить кошелек
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основное содержимое -->
+    <main class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <!-- Статус подключения -->
+        <div id="connection-alert" class="hidden mb-6">
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700" id="connection-message">
+                            Пожалуйста, подключите MetaMask для использования приложения.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Статус сети -->
+        <div id="network-alert" class="hidden mb-6">
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700" id="network-message">
+                            Пожалуйста, переключитесь на сеть Sepolia для использования приложения.
+                        </p>
+                        <button id="switch-network"
+                            class="mt-2 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                            Переключиться на Sepolia
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Статус транзакции -->
+        <div id="transaction-status" class="hidden mb-6">
+            <div class="transaction-status">
+                <div class="flex items-center">
+                    <div class="mr-3">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <div>
+                        <p id="transaction-message">Отправка транзакции...</p>
+                        <a id="etherscan-link" href="#" target="_blank"
+                            class="text-sm text-blue-600 hover:text-blue-800 hidden">Посмотреть в Etherscan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Представление для эмитента -->
+        <section id="issuer-view" class="role-section active">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Регистрация документа</h1>
+                <p class="text-gray-600 max-w-2xl mx-auto">Загрузите PDF-документ и введите метаданные для его
+                    регистрации в децентрализованном реестре.</p>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-6">
+                <form id="register-form" class="space-y-6">
+                    <!-- Загрузка PDF -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">
+                            Загрузите PDF-документ
+                        </label>
+                        <div class="mt-1">
+                            <input type="file" id="document-file" accept="application/pdf" class="block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-blue-50 file:text-blue-700
+                                hover:file:bg-blue-100">
+                        </div>
+                        <div id="pdf-preview" class="pdf-preview hidden">
+                            <div class="flex items-center">
+                                <svg class="h-6 w-6 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <span id="pdf-filename" class="text-gray-700"></span>
+                            </div>
+                            <div class="mt-2 flex justify-between items-center">
+                                <span class="text-sm text-gray-500">Хеш документа:</span>
+                                <span id="document-hash" class="hash-display text-xs text-gray-700"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Метаданные -->
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-medium text-gray-900">Метаданные документа</h2>
+                        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                            <div class="sm:col-span-1">
+                                <label for="student-name" class="block text-sm font-medium text-gray-700">
+                                    Имя студента
+                                </label>
+                                <div class="mt-1">
+                                    <input type="text" id="student-name" name="student-name"
+                                        class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                                        placeholder="Иван Петров">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-1">
+                                <label for="document-number" class="block text-sm font-medium text-gray-700">
+                                    Номер документа
+                                </label>
+                                <div class="mt-1">
+                                    <input type="text" id="document-number" name="document-number"
+                                        class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                                        placeholder="DIP-12345">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <label for="institution" class="block text-sm font-medium text-gray-700">
+                                    Учебное заведение
+                                </label>
+                                <div class="mt-1">
+                                    <input type="text" id="institution" name="institution"
+                                        class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                                        placeholder="Государственный университет">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-1">
+                                <label for="issue-date" class="block text-sm font-medium text-gray-700">
+                                    Дата выдачи
+                                </label>
+                                <div class="mt-1">
+                                    <input type="date" id="issue-date" name="issue-date"
+                                        class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопка регистрации -->
+                    <div>
+                        <button type="submit" id="register-button"
+                            class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled>
+                            Зарегистрировать документ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Представление для верификатора -->
+        <section id="verifier-view" class="role-section hidden">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Верификация документа</h1>
+                <p class="text-gray-600 max-w-2xl mx-auto">Загрузите PDF-документ для проверки его подлинности в
+                    децентрализованном реестре.</p>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-6">
+                <form id="verify-form" class="space-y-6">
+                    <!-- Загрузка PDF -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">
+                            Загрузите PDF-документ для проверки
+                        </label>
+                        <div class="mt-1">
+                            <input type="file" id="verify-file" accept="application/pdf" class="block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-blue-50 file:text-blue-700
+                                hover:file:bg-blue-100">
+                        </div>
+                        <div id="verify-pdf-preview" class="pdf-preview hidden">
+                            <div class="flex items-center">
+                                <svg class="h-6 w-6 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <span id="verify-filename" class="text-gray-700"></span>
+                            </div>
+                            <div class="mt-2 flex justify-between items-center">
+                                <span class="text-sm text-gray-500">Хеш документа:</span>
+                                <span id="verify-document-hash" class="hash-display text-xs text-gray-700"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопка проверки -->
+                    <div>
+                        <button type="submit" id="verify-button"
+                            class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled>
+                            Проверить документ
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Результат проверки -->
+                <div id="verification-result" class="hidden mt-8">
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <div class="text-center mb-6">
+                            <div id="verification-status"
+                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4">
+                                <!-- Статус будет вставлен здесь -->
+                            </div>
+                            <h2 id="verification-title" class="text-2xl font-bold"></h2>
+                        </div>
+
+                        <div id="verification-details" class="space-y-3">
+                            <!-- Детали документа будут вставлены здесь -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Представление для администратора -->
+        <section id="admin-view" class="role-section hidden">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Управление эмитентами</h1>
+                <p class="text-gray-600 max-w-2xl mx-auto">Добавляйте и удаляйте эмитенты, которые имеют право
+                    регистрировать документы в системе.</p>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="space-y-6">
+                    <!-- Добавление эмитента -->
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900 mb-4">Добавить нового эмитента</h2>
+                        <form id="add-issuer-form" class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                            <div class="sm:col-span-4">
+                                <label for="new-issuer-address" class="block text-sm font-medium text-gray-700">
+                                    Адрес кошелька
+                                </label>
+                                <div class="mt-1">
+                                    <input type="text" id="new-issuer-address" name="new-issuer-address"
+                                        class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                                        placeholder="0x...">
+                                </div>
+                            </div>
+                            <div class="sm:col-span-2 flex items-end">
+                                <button type="submit" id="add-issuer-button"
+                                    class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                    Добавить эмитента
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-6">
+                        <h2 class="text-lg font-medium text-gray-900 mb-4">Список эмитентов</h2>
+                        <div id="issuers-list" class="space-y-3">
+                            <!-- Список эмитентов будет загружен здесь -->
+                            <div class="text-center py-8 text-gray-500">
+                                <div class="loading-spinner mx-auto mb-3"></div>
+                                <p>Загрузка списка эмитентов...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p class="text-gray-500">&copy; 2026 DocumentChain. Дипломный проект по децентрализованным системам
+                    верификации документов.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Скрипты -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.15.0/ethers.umd.min.js"></script>
+    <script>
+        // ABI контракта DocumentRegistry
+        const contractABI = [
+            {
+                "inputs": [
+                    {
+                        "internalType": "address[]",
+                        "name": "_initialIssuers",
+                        "type": "address[]"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "bytes32",
+                        "name": "docHash",
+                        "type": "bytes32"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "issuer",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "metadata",
+                        "type": "string"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "DocumentRegistered",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "bytes32",
+                        "name": "docHash",
+                        "type": "bytes32"
+                    },
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "issuer",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "DocumentRevoked",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "issuer",
+                        "type": "address"
+                    }
+                ],
+                "name": "IssuerAdded",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "issuer",
+                        "type": "address"
+                    }
+                ],
+                "name": "IssuerRemoved",
+                "type": "event"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_issuer",
+                        "type": "address"
+                    }
+                ],
+                "name": "addIssuer",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "_docHash",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "revokeDocument",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "_docHash",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "_metadata",
+                        "type": "string"
+                    }
+                ],
+                "name": "registerDocument",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_issuer",
+                        "type": "address"
+                    }
+                ],
+                "name": "removeIssuer",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "bytes32",
+                        "name": "_docHash",
+                        "type": "bytes32"
+                    }
+                ],
+                "name": "verifyDocument",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "exists",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "issuer",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "metadata",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isActive",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "name": "isIssuer",
+                "outputs": [
+                    {
+                        "internalType": "bool",
+                        "name": "",
+                        "type": "bool"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "owner",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+
+        const contractAddress = "0x9BF25ae134d4eC0C1B8A11Dfe510B83fB82B1D07"; // Адрес контракта на Sepolia
+
+        // Список альтернативных RPC endpoints для Sepolia
+        const SEPOLIA_RPC_URLS = [
+            'https://sepolia.infura.io/v3/0415d60dc8ef49d79218cf87f10db451',
+            'https://eth-sepolia.g.alchemy.com/v2/EzZHuvucOlWxiVIhLlW9Z',
+            'https://rpc.ankr.com/eth_sepolia',
+        ];
+
+        const METAMASK_DOWNLOAD_URL = 'https://metamask.io/download/';
+
+        // Глобальные переменные
+        let provider;
+        let jsonRpcProvider; // Fallback provider без подписи
+        let signer;
+        let contract;
+        let userAddress;
+        let userRole;
+        let isConnected = false;
+        let isSepolia = false;
+        let documentHash = null;
+        let verifyDocumentHash = null;
+        let currentRpcUrl = null; // Текущий рабочий RPC URL
+
+        // Инициализация приложения
+        document.addEventListener('DOMContentLoaded', function () {
+            // Проверяем наличие MetaMask
+            checkMetaMask();
+
+            // Инициализация событий
+            initEventListeners();
+
+            // Инициализация роутинга
+            initRouting();
+
+            // Обработка изменения хеша для навигации по вкладкам
+            window.addEventListener('hashchange', function () {
+                updateActiveView();
+            });
+
+            // Устанавливаем текущую дату по умолчанию
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('issue-date').value = today;
+
+            updateActiveView();
+        });
+
+        // Проверка наличия MetaMask
+        function checkMetaMask() {
+            const connectionAlert = document.getElementById('connection-alert');
+            const connectionMessage = document.getElementById('connection-message');
+            const connectButtonDesktop = document.getElementById('connect-wallet');
+            const connectButtonMobile = document.getElementById('mobile-connect-wallet');
+
+            if (typeof window.ethereum !== 'undefined') {
+                connectionAlert.classList.add('hidden');
+
+                connectButtonDesktop.textContent = 'Подключить кошелек';
+                connectButtonMobile.textContent = 'Подключить кошелек';
+                connectButtonDesktop.onclick = connectWallet; // Убедимся, что обработчик подключения установлен
+                connectButtonMobile.onclick = connectWallet;
+                setupWalletConnection();
+            } else {
+                connectionAlert.classList.remove('hidden');
+                connectionMessage.textContent = 'Для использования приложения установите MetaMask.';
+
+                connectButtonDesktop.textContent = 'Установить MetaMask';
+                connectButtonMobile.textContent = 'Установить MetaMask';
+
+                // Устанавливаем обработчики для установки
+                connectButtonDesktop.onclick = () => { window.open(METAMASK_DOWNLOAD_URL, '_blank'); }; // Открывает в новой вкладке
+                connectButtonMobile.onclick = () => { window.open(METAMASK_DOWNLOAD_URL, '_blank'); };
+            }
+        }
+
+        // Настройка подключения кошелька (вспомогательная функция)
+        function setupWalletConnection() {
+            // Все инициализация теперь происходит в connectWallet()
+            // для избежания дублирования и ошибок
+        }
+
+        // Проверка текущей сети
+        async function checkNetwork() {
+            const networkAlert = document.getElementById('network-alert');
+            const networkMessage = document.getElementById('network-message');
+            const networkStatus = document.getElementById('network-status');
+            const mobileNetworkStatus = document.getElementById('mobile-network-status');
+
+            if (!provider) {
+                console.warn('Provider не инициализирован в checkNetwork');
+                return;
+            }
+
+            try {
+                console.log('Проверяю сеть...');
+                const network = await provider.getNetwork();
+                const sepoliaChainId = 11155111n; // Sepolia chain ID
+                const currentChainId = network.chainId;
+
+                console.log('Текущая сеть:', network.name, 'chainId:', currentChainId);
+
+                isSepolia = (currentChainId === sepoliaChainId);
+
+                if (isSepolia) {
+                    networkAlert.classList.add('hidden');
+                    networkStatus.className = 'network-badge sepolia-badge';
+                    networkStatus.textContent = 'Sepolia Testnet';
+                    mobileNetworkStatus.className = 'network-badge sepolia-badge';
+                    mobileNetworkStatus.textContent = 'Sepolia Testnet';
+                    console.log('Вы подключены к Sepolia');
+                } else {
+                    networkAlert.classList.remove('hidden');
+                    networkStatus.className = 'network-badge mainnet-badge';
+                    networkStatus.textContent = 'Неверная сеть';
+                    mobileNetworkStatus.className = 'network-badge mainnet-badge';
+                    mobileNetworkStatus.textContent = 'Неверная сеть';
+
+                    if (currentChainId === 1) {
+                        networkMessage.textContent = 'Пожалуйста, переключитесь на сеть Sepolia для использования приложения.';
+                    } else {
+                        networkMessage.textContent = 'Пожалуйста, переключитесь на сеть Sepolia для использования приложения.';
+                    }
+                    console.warn('⚠️ Вы подключены к неправильной сети:', network.name);
+                }
+            } catch (error) {
+                console.error('Ошибка при проверке сети:', error.message);
+                // Если не можем проверить сеть, но provider есть - продолжаем работу
+                console.log('Продолжаю работу несмотря на ошибку проверки сети');
+            }
+        }
+
+        // Переключение на сеть Sepolia
+        async function switchToSepolia() {
+            const sepoliaChainId = '0xaa36a7'; // Hex for 0x7a69
+
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: sepoliaChainId }],
+                });
+            } catch (switchError) {
+                // This error code indicates that the chain has not been added to MetaMask
+                if (switchError.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [
+                                {
+                                    chainId: sepoliaChainId,
+                                    chainName: 'Sepolia Test Network',
+                                    nativeCurrency: {
+                                        name: 'Ethereum',
+                                        symbol: 'ETH',
+                                        decimals: 18,
+                                    },
+                                    rpcUrls: ['https://rpc.sepolia.org/'],
+                                    blockExplorerUrls: ['https://sepolia.etherscan.io'],
+                                },
+                            ],
+                        });
+                    } catch (addError) {
+                        console.error('Не удалось добавить сеть Sepolia', addError);
+                    }
+                } else {
+                    console.error('Не удалось переключиться на сеть Sepolia', switchError);
+                }
+            }
+        }
+
+        // Подключение кошелька
+        async function connectWallet() {
+            const connectionAlert = document.getElementById('connection-alert');
+            const connectionMessage = document.getElementById('connection-message');
+
+            // Проверяем наличие MetaMask
+            if (typeof window.ethereum === 'undefined') {
+                connectionAlert.classList.remove('hidden');
+                connectionMessage.textContent = 'Пожалуйста, установите MetaMask для использования приложения.';
+                return;
+            }
+
+            try {
+                // Инициализируем provider только один раз
+                if (!provider) {
+                    console.log('Инициализирую provider...');
+                    provider = new ethers.BrowserProvider(window.ethereum);
+
+                    // Установка обработчиков событий
+                    window.ethereum.removeAllListeners('chainChanged');
+                    window.ethereum.removeAllListeners('accountsChanged');
+
+                    window.ethereum.on('chainChanged', (chainId) => {
+                        console.log('Сеть изменена, перезагружаю...');
+                        checkNetwork();
+                        window.location.reload();
+                    });
+
+                    window.ethereum.on('accountsChanged', (accounts) => {
+                        console.log('Аккаунты изменены:', accounts);
+                        if (accounts.length === 0) {
+                            handleWalletDisconnect();
+                        } else {
+                            userAddress = accounts[0];
+                            checkUserRole();
+                        }
+                    });
+                }
+
+                // Запрашиваем доступ к аккаунтам
+                console.log('Запрашиваю доступ к аккаунтам...');
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+                if (accounts.length === 0) {
+                    throw new Error('Аккаунты не получены');
+                }
+
+                userAddress = accounts[0];
+                console.log('Пользователь подключен:', userAddress);
+
+                // Получаем signer
+                console.log('Получаю signer...');
+                signer = await provider.getSigner();
+                console.log('Signer получен');
+
+                isConnected = true;
+
+                // Создаем экземпляр контракта
+                console.log('Создаю экземпляр контракта...');
+                contract = new ethers.Contract(contractAddress, contractABI, signer);
+                console.log('Контракт создан');
+
+                // Проверяем сеть
+                await checkNetwork();
+
+                // Обновляем UI
+                updateWalletUI();
+
+                // Проверяем роль пользователя
+                await checkUserRole();
+
+                // Скрываем сообщение о подключении
+                connectionAlert.classList.add('hidden');
+                console.log('Кошелек успешно подключен');
+            } catch (error) {
+                console.error('Ошибка подключения кошелька:', error);
+                console.error('Тип ошибки:', error.code);
+                console.error('Сообщение ошибки:', error.message);
+
+                connectionAlert.classList.remove('hidden');
+
+                // Более информативное сообщение об ошибке
+                if (error.code === 'ACTION_REJECTED' || error.code === -32603) {
+                    connectionMessage.textContent = 'Вы отклонили запрос подключения в MetaMask.';
+                } else if (error.message && error.message.includes('window.ethereum')) {
+                    connectionMessage.textContent = 'Пожалуйста, установите или активируйте MetaMask.';
+                } else {
+                    connectionMessage.textContent = 'Ошибка подключения: ' + (error.message || 'неизвестная ошибка');
+                }
+            }
+        }
+
+        // Функция для получения рабочего JSON RPC Provider с fallback
+        async function getWorkingJsonRpcProvider() {
+            // Если уже есть рабочий provider - используем его
+            if (jsonRpcProvider && currentRpcUrl) {
+                try {
+                    // Быстрая проверка доступности
+                    await jsonRpcProvider.getBlockNumber();
+                    console.log('✓ Используется cached RPC:', currentRpcUrl);
+                    return jsonRpcProvider;
+                } catch (e) {
+                    console.warn('✗ Cached RPC больше не работает, ищу новый...');
+                    jsonRpcProvider = null;
+                    currentRpcUrl = null;
+                }
+            }
+
+            // Пробуем каждый RPC endpoint в списке
+            console.log('🔍 Ищу рабочий RPC endpoint из', SEPOLIA_RPC_URLS.length, 'вариантов...');
+            for (const rpcUrl of SEPOLIA_RPC_URLS) {
+                try {
+                    console.log('  Проверяю:', rpcUrl);
+                    const testProvider = new ethers.JsonRpcProvider(rpcUrl);
+
+                    // Проверяем доступность endpoint с таймаутом
+                    await Promise.race([
+                        testProvider.getBlockNumber(),
+                        new Promise((_, reject) =>
+                            setTimeout(() => reject(new Error('Timeout')), 5000)
+                        )
+                    ]);
+
+                    console.log('✓ RPC endpoint работает:', rpcUrl);
+                    jsonRpcProvider = testProvider;
+                    currentRpcUrl = rpcUrl;
+                    return jsonRpcProvider;
+                } catch (error) {
+                    console.warn('  ✗ Недоступен:', error.message);
+                }
+            }
+
+            throw new Error(
+                'Не удалось подключиться ни к одному RPC endpoint. ' +
+                'Попробуйте позже или проверьте интернет-соединение.'
+            );
+        }
+
+        // Проверка роли пользователя
+        async function checkUserRole() {
+            if (!userAddress) {
+                console.warn('userAddress не определен');
+                userRole = 'verifier';
+                updateRoleUI();
+                return;
+            }
+
+            try {
+                console.log('Проверяю роль для адреса:', userAddress);
+                console.log('Адрес контракта:', contractAddress);
+
+                // Получаем рабочий JSON-RPC provider с fallback
+                console.log('Инициализирую JSON-RPC provider...');
+                const rpcProvider = await getWorkingJsonRpcProvider();
+
+                // Создаем read-only экземпляр контракта для проверки роли
+                const readOnlyContract = new ethers.Contract(contractAddress, contractABI, rpcProvider);
+
+                // Сначала проверим, есть ли контракт по этому адресу
+                console.log('Проверяю существование контракта...');
+                const code = await rpcProvider.getCode(contractAddress);
+                if (code === '0x') {
+                    throw new Error(
+                        'Контракт не найден по адресу ' + contractAddress + '. ' +
+                        'Пожалуйста, проверьте адрес контракта или разверните его на Sepolia.'
+                    );
+                }
+
+                console.log('Контракт найден, проверяю роль...');
+
+                try {
+                    const owner = await readOnlyContract.owner();
+                    console.log('Owner контракта:', owner);
+                    if (owner.toLowerCase() === userAddress.toLowerCase()) {
+                        console.log('Пользователь - OWNER');
+                        userRole = 'owner';
+                    } else {
+                        console.log('Проверяю, является ли пользователь эмитентом...');
+                        try {
+                            const isIssuer = await readOnlyContract.isIssuer(userAddress);
+                            if (isIssuer) {
+                                console.log('Пользователь - ISSUER');
+                                userRole = 'issuer';
+                            } else {
+                                console.log('Пользователь - VERIFIER (по умолчанию)');
+                                userRole = 'verifier';
+                            }
+                        } catch (issuerError) {
+                            console.warn('Ошибка проверки isIssuer:', issuerError.message);
+                            console.log('Устанавливаю роль по умолчанию: VERIFIER');
+                            userRole = 'verifier';
+                        }
+                    }
+                } catch (ownerError) {
+                    console.error('Ошибка при получении owner():', ownerError.message);
+                    console.log('Устанавливаю роль по умолчанию: VERIFIER');
+                    userRole = 'verifier';
+                }
+
+                console.log('Окончательная роль пользователя:', userRole);
+                updateRoleUI();
+            } catch (error) {
+                console.error('Критическая ошибка при проверке роли:', error);
+                console.error('Сообщение:', error.message);
+                console.error('Стек ошибки:', error.stack);
+
+                // Покажем пользователю понятное сообщение
+                const connectionAlert = document.getElementById('connection-alert');
+                const connectionMessage = document.getElementById('connection-message');
+
+                if (error.message && error.message.includes('Контракт не найден')) {
+                    connectionAlert.classList.remove('hidden');
+                    connectionMessage.innerHTML =
+                        '<strong>⚠️ Ошибка конфигурации:</strong> ' +
+                        error.message +
+                        '<br><small>Проверьте адрес контракта в коде или разверните контракт на Sepolia.</small>';
+                } else if (error.message && (error.message.includes('endpoint') || error.message.includes('RPC'))) {
+                    connectionAlert.classList.remove('hidden');
+                    connectionMessage.innerHTML =
+                        '<strong>⚠️ Ошибка подключения к RPC:</strong> ' +
+                        'Не удалось подключиться ни к одному RPC endpoint. ' +
+                        '<br>Проверьте интернет-соединение и попробуйте обновить страницу (Ctrl+R).' +
+                        '<br><small>' + error.message + '</small>';
+                } else {
+                    connectionAlert.classList.remove('hidden');
+                    connectionMessage.innerHTML =
+                        '<strong>⚠️ Ошибка:</strong> ' +
+                        error.message +
+                        '<br><small>Попробуйте обновить страницу или проверьте консоль браузера.</small>';
+                }
+
+                console.log('Устанавливаю роль по умолчанию: VERIFIER');
+                userRole = 'verifier';
+                updateRoleUI();
+            }
+        }
+
+        // Обновление UI после подключения кошелька
+        function updateWalletUI() {
+            const walletStatus = document.getElementById('wallet-status');
+            const mobileWalletStatus = document.getElementById('mobile-wallet-status');
+            const walletAddress = document.getElementById('wallet-address');
+            const mobileWalletAddress = document.getElementById('mobile-wallet-address');
+
+            // Форматируем адрес для отображения
+            const displayAddress = `${userAddress.substring(0, 6)}...${userAddress.substring(userAddress.length - 4)}`;
+
+            walletAddress.textContent = displayAddress;
+            mobileWalletAddress.textContent = displayAddress;
+
+            walletStatus.classList.remove('hidden');
+            mobileWalletStatus.classList.remove('hidden');
+
+            document.getElementById('connect-wallet').classList.add('hidden');
+            document.getElementById('mobile-connect-wallet').classList.add('hidden');
+        }
+
+        // Обновление UI в зависимости от роли
+        function updateRoleUI() {
+            console.log('Обновляю UI для роли:', userRole);
+            
+            // Скрываем все разделы
+            document.querySelectorAll('.role-section').forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none';
+            });
+
+            // Показываем разделы в зависимости от роли
+            switch(userRole) {
+                case 'owner':
+                    console.log('  OWNER: показываю все 3 вкладки');
+                    // Owner видит все 3 вкладки
+                    document.getElementById('issuer-view').classList.add('active');
+                    document.getElementById('issuer-view').style.display = 'block';
+                    document.getElementById('verifier-view').classList.add('active');
+                    document.getElementById('verifier-view').style.display = 'block';
+                    document.getElementById('admin-view').classList.add('active');
+                    document.getElementById('admin-view').style.display = 'block';
+                    loadIssuersList();
+                    // По умолчанию показываем issuer-view для owner
+                    window.location.hash = '#/issue';
+                    break;
+                    
+                case 'issuer':
+                    console.log('  ISSUER: показываю регистрацию и верификацию');
+                    // Issuer видит регистрацию и верификацию
+                    document.getElementById('issuer-view').classList.add('active');
+                    document.getElementById('issuer-view').style.display = 'block';
+                    document.getElementById('verifier-view').classList.add('active');
+                    document.getElementById('verifier-view').style.display = 'block';
+                    // По умолчанию показываем issuer-view для issuer
+                    window.location.hash = '#/issue';
+                    break;
+                    
+                case 'verifier':
+                default:
+                    console.log('  VERIFIER: показываю только верификацию');
+                    // Verifier видит только верификацию
+                    document.getElementById('verifier-view').classList.add('active');
+                    document.getElementById('verifier-view').style.display = 'block';
+                    // По умолчанию показываем verifier-view
+                    window.location.hash = '#/verify';
+                    break;
+            }
+            
+            console.log('UI обновлен для роли:', userRole);
+        }
+
+        // Отключение кошелька
+        function handleWalletDisconnect() {
+            isConnected = false;
+            userAddress = null;
+            userRole = null;
+            signer = null;
+            contract = null;
+
+            // Скрываем статус кошелька
+            document.getElementById('wallet-status').classList.add('hidden');
+            document.getElementById('mobile-wallet-status').classList.add('hidden');
+
+            // Показываем кнопку подключения
+            document.getElementById('connect-wallet').classList.remove('hidden');
+            document.getElementById('mobile-connect-wallet').classList.remove('hidden');
+
+            // Скрываем разделы
+            document.querySelectorAll('.role-section').forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none';
+            });
+
+            // Показываем alert о необходимости подключения
+            const connectionAlert = document.getElementById('connection-alert');
+            const connectionMessage = document.getElementById('connection-message');
+            connectionAlert.classList.remove('hidden');
+            connectionMessage.textContent = 'Кошелек отключен. Пожалуйста, подключите MetaMask для использования приложения.';
+
+            // Сбрасываем форму
+            resetForms();
+        }
+
+        // Сброс форм
+        function resetForms() {
+            // Сброс формы регистрации
+            document.getElementById('document-file').value = '';
+            document.getElementById('pdf-preview').classList.add('hidden');
+            document.getElementById('register-button').disabled = true;
+
+            // Сброс формы проверки
+            document.getElementById('verify-file').value = '';
+            document.getElementById('verify-pdf-preview').classList.add('hidden');
+            document.getElementById('verify-button').disabled = true;
+            document.getElementById('verification-result').classList.add('hidden');
+
+            // Сброс формы добавления эмитента
+            document.getElementById('new-issuer-address').value = '';
+        }
+
+        // Функции работы с темой
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        // Инициализация обработчиков событий
+        function initEventListeners() {
+            // Подключение кошелька
+            document.getElementById('connect-wallet').addEventListener('click', connectWallet);
+            document.getElementById('mobile-connect-wallet').addEventListener('click', connectWallet);
+
+            // Отключение кошелька
+            document.getElementById('disconnect-wallet').addEventListener('click', handleWalletDisconnect);
+            document.getElementById('mobile-disconnect-wallet').addEventListener('click', handleWalletDisconnect);
+
+            // Переключение сети
+            document.getElementById('switch-network').addEventListener('click', switchToSepolia);
+
+            // Мобильное меню
+            document.getElementById('mobile-menu-button').addEventListener('click', function () {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('hidden');
+            });
+
+            // Навигационные ссылки - закрытие мобильного меню при клике
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                    updateActiveView();
+                });
+            });
+
+            // Загрузка документа для регистрации
+            document.getElementById('document-file').addEventListener('change', function (e) {
+                handleFileUpload(e, true);
+            });
+
+            // Загрузка документа для проверки
+            document.getElementById('verify-file').addEventListener('change', function (e) {
+                handleFileUpload(e, false);
+            });
+
+            // Регистрация документа
+            document.getElementById('register-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                registerDocument();
+            });
+
+            // Проверка документа
+            document.getElementById('verify-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                verifyDocument();
+            });
+
+            // Добавление эмитента
+            document.getElementById('add-issuer-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                addIssuer();
+            });
+
+            // Переключатель темы
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+            if (document.getElementById('mobile-theme-toggle')) {
+                document.getElementById('mobile-theme-toggle').addEventListener('click', toggleTheme);
+            }
+
+            // Инициализация темы при загрузке страницы
+            initTheme();
+        }
+
+        // Обработка загрузки файла
+        async function handleFileUpload(event, isRegister) {
+            const file = event.target.files[0];
+            if (!file || file.type !== 'application/pdf') {
+                alert('Пожалуйста, загрузите PDF-файл.');
+                return;
+            }
+
+            // Отображаем имя файла
+            const filenameElement = isRegister ?
+                document.getElementById('pdf-filename') :
+                document.getElementById('verify-filename');
+            const previewElement = isRegister ?
+                document.getElementById('pdf-preview') :
+                document.getElementById('verify-pdf-preview');
+            const hashElement = isRegister ?
+                document.getElementById('document-hash') :
+                document.getElementById('verify-document-hash');
+
+            filenameElement.textContent = file.name;
+            previewElement.classList.remove('hidden');
+
+            // Вычисляем хеш файла
+            try {
+                const hash = await calculateFileHash(file);
+                hashElement.textContent = hash;
+
+                if (isRegister) {
+                    documentHash = hash;
+                    document.getElementById('register-button').disabled = false;
+                } else {
+                    verifyDocumentHash = hash;
+                    document.getElementById('verify-button').disabled = false;
+                }
+            } catch (error) {
+                console.error('Ошибка вычисления хеша:', error);
+                alert('Ошибка при обработке файла. Пожалуйста, попробуйте снова.');
+            }
+        }
+
+        // Вычисление SHA-256 хеша файла
+        async function calculateFileHash(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+
+                reader.onload = async function () {
+                    const arrayBuffer = reader.result;
+                    const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    resolve('0x' + hashHex);
+                };
+
+                reader.onerror = function () {
+                    reject(new Error('Ошибка чтения файла'));
+                };
+
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        // Регистрация документа
+        async function registerDocument() {
+            if (!documentHash) {
+                alert('Пожалуйста, загрузите PDF-файл.');
+                return;
+            }
+
+            const studentName = document.getElementById('student-name').value;
+            const documentNumber = document.getElementById('document-number').value;
+            const institution = document.getElementById('institution').value;
+            const issueDate = document.getElementById('issue-date').value;
+
+            if (!studentName || !documentNumber || !institution || !issueDate) {
+                alert('Пожалуйста, заполните все поля метаданных.');
+                return;
+            }
+
+            // Формируем метаданные
+            const metadata = JSON.stringify({
+                studentName,
+                documentNumber,
+                institution,
+                issueDate
+            });
+
+            // Показываем статус транзакции
+            showTransactionStatus('Отправка транзакции регистрации документа...');
+
+            try {
+                // Отправляем транзакцию
+                const tx = await contract.registerDocument(documentHash, metadata);
+
+                // Показываем хеш транзакции и ссылку на Etherscan
+                const etherscanLink = `https://sepolia.etherscan.io/tx/${tx.hash}`;
+                document.getElementById('etherscan-link').href = etherscanLink;
+                document.getElementById('etherscan-link').classList.remove('hidden');
+
+                // Ожидаем подтверждения
+                showTransactionStatus('Ожидание подтверждения транзакции...');
+                const receipt = await tx.wait();
+                
+                // Успех
+                showTransactionStatus('Документ успешно зарегистрирован в блокчейне!', 'success');
+                document.getElementById('etherscan-link').href = etherscanLink;
+                document.getElementById('etherscan-link').classList.remove('hidden');
+
+                // Сбрасываем форму
+                resetForms();
+
+            } catch (error) {
+                console.error('Ошибка регистрации документа:', error);
+                let errorMessage = 'Не удалось зарегистрировать документ.';
+
+                if (error.message.includes('user rejected transaction')) {
+                    errorMessage = 'Вы отменили транзакцию.';
+                } else if (error.message.includes('insufficient funds')) {
+                    errorMessage = 'Недостаточно средств для оплаты газа.';
+                }
+
+                showTransactionStatus(errorMessage, 'error');
+            }
+        }
+
+        // Проверка документа
+        async function verifyDocument() {
+            if (!verifyDocumentHash) {
+                alert('Пожалуйста, загрузите PDF-файл.');
+                return;
+            }
+
+            // Показываем статус проверки
+            showTransactionStatus('Проверка документа в блокчейне...');
+
+            try {
+                // Вызываем функцию verifyDocument
+                const result = await contract.verifyDocument(verifyDocumentHash);
+
+                const [exists, issuer, metadata, timestamp, isActive] = result;
+
+                // Скрываем статус транзакции
+                hideTransactionStatus();
+
+                // Отображаем результат
+                const resultSection = document.getElementById('verification-result');
+                const statusElement = document.getElementById('verification-status');
+                const titleElement = document.getElementById('verification-title');
+                const detailsElement = document.getElementById('verification-details');
+
+                if (!exists) {
+                    statusElement.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-revoked';
+                    statusElement.textContent = 'Не найден';
+                    titleElement.textContent = 'Документ не найден в реестре';
+                    titleElement.className = 'text-2xl font-bold text-red-600';
+                    detailsElement.innerHTML = `
+                        <p class="text-gray-700">Документ с указанным хешем не найден в децентрализованном реестре.</p>
+                        <p class="text-gray-500 text-sm mt-2">Хеш документа: <span class="hash-display">${verifyDocumentHash}</span></p>
+                    `;
+                } else if (!isActive) {
+                    statusElement.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-revoked';
+                    statusElement.textContent = 'Отозван';
+                    titleElement.textContent = 'Документ отозван';
+                    titleElement.className = 'text-2xl font-bold text-yellow-600';
+
+                    // Парсим метаданные
+                    let metadataObj = {};
+                    try {
+                        metadataObj = JSON.parse(metadata);
+                    } catch (e) {
+                        console.error('Ошибка парсинга метаданных:', e);
+                    }
+
+                    const formattedDate = new Date(Number(timestamp) * 1000).toLocaleString('ru-RU', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    detailsElement.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Имя студента</p>
+                                <p class="font-medium">${metadataObj.studentName || 'Не указано'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Номер документа</p>
+                                <p class="font-medium">${metadataObj.documentNumber || 'Не указано'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Учебное заведение</p>
+                                <p class="font-medium">${metadataObj.institution || 'Не указано'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Дата выдачи</p>
+                                <p class="font-medium">${metadataObj.issueDate || 'Не указано'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Дата регистрации</p>
+                                <p class="font-medium">${formattedDate}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Эмитент</p>
+                                <p class="font-medium hash-display">${issuer}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                            <p class="text-sm text-yellow-800">Этот документ был отозван эмитентом и не является действительным.</p>
+                        </div>
+                    `;
+                } else {
+                    statusElement.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-active';
+                    statusElement.textContent = 'Активен';
+                    titleElement.textContent = 'Документ подлинный';
+                    titleElement.className = 'text-2xl font-bold text-green-600';
+
+                    // Парсим метаданные
+                    let metadataObj = {};
+                    try {
+                        metadataObj = JSON.parse(metadata);
+                    } catch (e) {
+                        console.error('Ошибка парсинга метаданных:', e);
+                    }
+
+                    const formattedDate = new Date(Number(timestamp) * 1000).toLocaleString('ru-RU', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    detailsElement.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Имя студента</p>
+                                <p class="font-medium">${metadataObj.studentName || 'Не указано'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Номер документа</p>
+                                <p class="font-medium">${metadataObj.documentNumber || 'Не указано'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Учебное заведение</p>
+                                <p class="font-medium">${metadataObj.institution || 'Не указано'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Дата выдачи</p>
+                                <p class="font-medium">${metadataObj.issueDate || 'Не указано'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Дата регистрации</p>
+                                <p class="font-medium">${formattedDate}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Эмитент</p>
+                                <p class="font-medium hash-display">${issuer}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
+                            <p class="text-sm text-green-800">Этот документ зарегистрирован в децентрализованном реестре и является действительным.</p>
+                        </div>
+                    `;
+                }
+
+                resultSection.classList.remove('hidden');
+            } catch (error) {
+                console.error('Ошибка проверки документа:', error);
+                hideTransactionStatus();
+
+                const resultSection = document.getElementById('verification-result');
+                const statusElement = document.getElementById('verification-status');
+                const titleElement = document.getElementById('verification-title');
+                const detailsElement = document.getElementById('verification-details');
+
+                statusElement.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-revoked';
+                statusElement.textContent = 'Ошибка';
+                titleElement.textContent = 'Ошибка проверки документа';
+                titleElement.className = 'text-2xl font-bold text-red-600';
+                detailsElement.innerHTML = `
+                    <p class="text-gray-700">Произошла ошибка при проверке документа в блокчейне.</p>
+                    <p class="text-gray-500 text-sm mt-2">Хеш документа: <span class="hash-display">${verifyDocumentHash}</span></p>
+                    <p class="text-red-600 mt-2">Ошибка: ${error.message}</p>
+                `;
+
+                resultSection.classList.remove('hidden');
+            }
+        }
+
+        // Добавление эмитента
+        async function addIssuer() {
+            const newIssuerAddress = document.getElementById('new-issuer-address').value.trim();
+
+            if (!ethers.isAddress(newIssuerAddress)) {
+                alert('Пожалуйста, введите корректный адрес Ethereum.');
+                return;
+            }
+
+            // Показываем статус транзакции
+            showTransactionStatus('Отправка транзакции добавления эмитента...');
+
+            try {
+                // Отправляем транзакцию
+                const tx = await contract.addIssuer(newIssuerAddress);
+
+                // Показываем хеш транзакции и ссылку на Etherscan
+                const etherscanLink = `https://sepolia.etherscan.io/tx/${tx.hash}`;
+                document.getElementById('etherscan-link').href = etherscanLink;
+                document.getElementById('etherscan-link').classList.remove('hidden');
+
+                // Ожидаем подтверждения
+                showTransactionStatus('Ожидание подтверждения транзакции...');
+                await tx.wait();
+
+                // Успех
+                showTransactionStatus('Эмитент успешно добавлен!', 'success');
+                document.getElementById('etherscan-link').href = etherscanLink;
+                document.getElementById('etherscan-link').classList.remove('hidden');
+
+                // Обновляем список эмитентов
+                loadIssuersList();
+
+                // Сбрасываем форму
+                document.getElementById('new-issuer-address').value = '';
+
+            } catch (error) {
+                console.error('Ошибка добавления эмитента:', error);
+                let errorMessage = 'Не удалось добавить эмитента.';
+
+                if (error.message.includes('user rejected transaction')) {
+                    errorMessage = 'Вы отменили транзакцию.';
+                } else if (error.message.includes('insufficient funds')) {
+                    errorMessage = 'Недостаточно средств для оплаты газа.';
+                } else if (error.message.includes('reverted')) {
+                    errorMessage = 'Вы не имеете прав для добавления эмитентов.';
+                }
+
+                showTransactionStatus(errorMessage, 'error');
+            }
+        }
+
+        // Загрузка списка эмитентов
+        async function loadIssuersList() {
+            const issuersList = document.getElementById('issuers-list');
+
+            try {
+                issuersList.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <div class="loading-spinner mx-auto mb-3"></div>
+                        <p>Загрузка списка эмитентов...</p>
+                    </div>
+                `;
+
+                // Получаем владельца контракта
+                const owner = await contract.owner();
+
+                // Для простоты, предположим, что мы можем получить список эмитентов через событие
+                // В реальности, контракт не предоставляет прямого способа получения всех эмитентов
+                // Поэтому мы будем использовать события IssuerAdded и IssuerRemoved
+                const filter = contract.filters.IssuerAdded();
+                const events = await contract.queryFilter(filter);
+
+                // Создаем уникальный список эмитентов
+                const issuers = [];
+                const removedIssuers = new Set();
+
+                // Сначала собираем все удаленные эмитенты
+                const removeFilter = contract.filters.IssuerRemoved();
+                const removeEvents = await contract.queryFilter(removeFilter);
+
+                removeEvents.forEach(event => {
+                    if (event.args && event.args.issuer) {
+                        removedIssuers.add(event.args.issuer.toLowerCase());
+                    }
+                });
+
+                // Добавляем эмитентов, которые не были удалены
+                events.forEach(event => {
+                    if (event.args && event.args.issuer) {
+                        const issuerAddress = event.args.issuer.toLowerCase();
+                        if (!removedIssuers.has(issuerAddress)) {
+                            issuers.push(issuerAddress);
+                        }
+                    }
+                });
+
+                // Гарантируем, что владелец тоже в списке
+                if (!issuers.includes(owner.toLowerCase())) {
+                    issuers.push(owner.toLowerCase());
+                }
+
+                // Отображаем список
+                if (issuers.length === 0) {
+                    issuersList.innerHTML = `
+                        <div class="text-center py-8 text-gray-500">
+                            <p>Нет зарегистрированных эмитентов.</p>
+                        </div>
+                    `;
+                } else {
+                    let issuersHTML = '';
+
+                    issuers.forEach((issuer, index) => {
+                        const isOwner = (issuer === owner.toLowerCase());
+                        const roleBadge = isOwner ?
+                            '<span class="role-badge owner-badge ml-2">Владелец</span>' :
+                            '<span class="role-badge issuer-badge ml-2">Эмитент</span>';
+
+                        issuersHTML += `
+                            <div class="bg-gray-50 p-4 rounded-lg flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="text-sm font-medium text-gray-900 hash-display">${issuer}</div>
+                                    ${roleBadge}
+                                </div>
+                                ${!isOwner ? `
+                                    <button data-address="${issuer}" class="remove-issuer-button text-red-600 hover:text-red-900 font-medium text-sm">
+                                        Удалить
+                                    </button>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+
+                    issuersList.innerHTML = issuersHTML;
+
+                    // Добавляем обработчики для кнопок удаления
+                    document.querySelectorAll('.remove-issuer-button').forEach(button => {
+                        button.addEventListener('click', function () {
+                            const issuerAddress = this.getAttribute('data-address');
+                            removeIssuer(issuerAddress);
+                        });
+                    });
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки списка эмитентов:', error);
+                issuersList.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <p class="text-red-600">Ошибка загрузки списка эмитентов.</p>
+                        <button onclick="loadIssuersList()" class="mt-2 text-blue-600 hover:text-blue-800">Попробовать снова</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Удаление эмитента
+        async function removeIssuer(issuerAddress) {
+            if (!confirm(`Вы действительно хотите удалить эмитента ${issuerAddress}?`)) {
+                return;
+            }
+
+            // Показываем статус транзакции
+            showTransactionStatus('Отправка транзакции удаления эмитента...');
+
+            try {
+                // Отправляем транзакцию
+                const tx = await contract.removeIssuer(issuerAddress);
+
+                // Показываем хеш транзакции и ссылку на Etherscan
+                const etherscanLink = `https://sepolia.etherscan.io/tx/${tx.hash}`;
+                document.getElementById('etherscan-link').href = etherscanLink;
+                document.getElementById('etherscan-link').classList.remove('hidden');
+
+                // Ожидаем подтверждения
+                showTransactionStatus('Ожидание подтверждения транзакции...');
+                await tx.wait();
+
+                // Успех
+                showTransactionStatus('Эмитент успешно удален!', 'success');
+                document.getElementById('etherscan-link').href = etherscanLink;
+                document.getElementById('etherscan-link').classList.remove('hidden');
+
+                // Обновляем список эмитентов
+                loadIssuersList();
+
+            } catch (error) {
+                console.error('Ошибка удаления эмитента:', error);
+                let errorMessage = 'Не удалось удалить эмитента.';
+
+                if (error.message.includes('user rejected transaction')) {
+                    errorMessage = 'Вы отменили транзакцию.';
+                } else if (error.message.includes('insufficient funds')) {
+                    errorMessage = 'Недостаточно средств для оплаты газа.';
+                } else if (error.message.includes('reverted')) {
+                    errorMessage = 'Вы не имеете прав для удаления эмитентов.';
+                }
+
+                showTransactionStatus(errorMessage, 'error');
+            }
+        }
+
+        // Роутинг
+        function initRouting() {
+            updateActiveView();
+        }
+
+        // Обновление активного представления
+        function updateActiveView() {
+            const hash = window.location.hash || '#/verify';
+            const sections = document.querySelectorAll('.role-section');
+
+            // Скрываем все секции
+            sections.forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none';
+            });
+
+            // Показываем нужную секцию
+            if (hash === '#/issue' && (userRole === 'issuer' || userRole === 'owner' || !isConnected)) {
+                document.getElementById('issuer-view').classList.add('active');
+                document.getElementById('issuer-view').style.display = 'block';
+            } else if (hash === '#/verify') {
+                document.getElementById('verifier-view').classList.add('active');
+                document.getElementById('verifier-view').style.display = 'block';
+            } else if (hash === '#/admin' && userRole === 'owner') {
+                document.getElementById('admin-view').classList.add('active');
+                document.getElementById('admin-view').style.display = 'block';
+            } else {
+                // По умолчанию показываем форму для верификатора
+                document.getElementById('verifier-view').classList.add('active');
+                document.getElementById('verifier-view').style.display = 'block';
+                if (window.location.hash !== '#/verify') {
+                    window.location.hash = '#/verify';
+                }
+            }
+
+            // Обновляем активные ссылки в навигации
+            document.querySelectorAll('.nav-link').forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === hash) {
+                    link.classList.add('border-primary', 'text-gray-900', 'bg-blue-50');
+                    link.classList.remove('border-transparent', 'text-gray-500', 'hover:border-gray-300', 'hover:text-gray-700', 'hover:bg-gray-50');
+                } else {
+                    link.classList.remove('border-primary', 'text-gray-900', 'bg-blue-50');
+                    link.classList.add('border-transparent', 'text-gray-500', 'hover:border-gray-300', 'hover:text-gray-700', 'hover:bg-gray-50');
+                }
+            });
+
+            // Закрываем мобильное меню после клика
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+        }
+
+        // Показать статус транзакции
+        function showTransactionStatus(message, status = 'pending') {
+            const transactionStatus = document.getElementById('transaction-status');
+            const transactionMessage = document.getElementById('transaction-message');
+
+            // Удаляем предыдущие классы
+            transactionStatus.className = 'transaction-status';
+
+            // Добавляем классы в зависимости от статуса
+            if (status === 'pending') {
+                transactionStatus.classList.add('transaction-pending');
+            } else if (status === 'success') {
+                transactionStatus.classList.add('transaction-success');
+            } else if (status === 'error') {
+                transactionStatus.classList.add('transaction-error');
+            }
+
+            transactionMessage.textContent = message;
+            transactionStatus.classList.remove('hidden');
+        }
+
+        // Скрыть статус транзакции
+        function hideTransactionStatus() {
+            document.getElementById('transaction-status').classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>
