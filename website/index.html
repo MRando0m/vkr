@@ -24,7 +24,6 @@
         }
     </script>
 
-    <!-- Шрифты -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -162,7 +161,6 @@
             }
         }
 
-        /* Светлая тема (по умолчанию) */
         :root {
             --bg-primary: #f8fafc;
             --bg-secondary: #ffffff;
@@ -175,7 +173,6 @@
             --shadow-color: rgba(0, 0, 0, 0.1);
         }
 
-        /* Темная тема */
         body.dark-mode {
             --bg-primary: #0f172a;
             --bg-secondary: #1e293b;
@@ -199,15 +196,15 @@
             color: var(--text-primary);
         }
 
-        /* Навигация - темная тема */
         nav {
             background-color: var(--nav-bg);
             color: var(--text-primary);
             border-bottom: 1px solid var(--border-color);
         }
 
-        /* Инпуты и текстарии - темная тема */
-        input, textarea, select {
+        input,
+        textarea,
+        select {
             background-color: var(--input-bg);
             color: var(--text-primary);
             border-color: var(--input-border);
@@ -217,19 +214,16 @@
             color: var(--text-secondary);
         }
 
-        /* Карточки */
         .document-card {
             background-color: var(--bg-secondary);
             border-color: var(--border-color);
         }
 
-        /* Алерты */
         .alert {
             background-color: var(--bg-secondary);
             border-color: var(--border-color);
         }
 
-        /* Бейджи - адаптация для темной темы */
         body.dark-mode .sepolia-badge {
             background-color: #082f49;
             color: #06b6d4;
@@ -250,7 +244,6 @@
             color: #fbbf24;
         }
 
-        /* Таблицы */
         table {
             background-color: var(--bg-secondary);
             color: var(--text-primary);
@@ -269,9 +262,12 @@
             background-color: var(--input-bg);
         }
 
-        /* Алерты - темная тема */
         body.dark-mode .bg-yellow-50 {
             background-color: #78350f;
+        }
+
+        body.dark-mode .bg-yellow-100 {
+            background-color: #fbbf24;
         }
 
         body.dark-mode .border-yellow-400 {
@@ -322,7 +318,6 @@
             color: #bbf7d0;
         }
 
-        /* Навигационные элементы - темная тема */
         body.dark-mode nav {
             background-color: #1e293b;
             border-bottom-color: #334155;
@@ -383,49 +378,203 @@
         body.dark-mode .font-bold {
             color: #f1f5f9;
         }
+
+        body.dark-mode #network-message {
+            color: #fef3c7;
+        }
+
+        .theme-icon {
+            transition: opacity 0.3s ease;
+        }
+
+        .theme-icon.hidden {
+            display: none;
+        }
+
+        .check-icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .transaction-status .spinner-container {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .transaction-status.success .spinner-container {
+            display: none;
+        }
+
+        .transaction-status .check-icon {
+            display: none;
+        }
+
+        .transaction-status.success .check-icon {
+            display: inline-block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-slideIn {
+            animation: slideIn 0.3s ease-out;
+        }
     </style>
 </head>
 
-<body class="min-h-screen">
-    <!-- Навигационная панель -->
-    <nav class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center">
-                        <svg class="h-8 w-8 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <span class="ml-2 text-xl font-bold text-gray-900">DocumentChain</span>
+<body class="bg-white text-gray-900">
+    <div class="flex flex-col min-h-screen">
+        <!-- Навигационная панель -->
+        <nav class="bg-white shadow-sm flex-shrink-0">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span class="ml-2 text-xl font-bold text-gray-900">DocumentChain</span>
+                        </div>
+                        <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                            <a href="#/issue"
+                                class="nav-link border-primary text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Для эмитента
+                            </a>
+                            <a href="#/verify"
+                                class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Для верификатора
+                            </a>
+                            <a href="#/admin"
+                                class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Администрирование
+                            </a>
+                        </div>
                     </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="#/issue"
-                            class="nav-link border-primary text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Для эмитента
-                        </a>
-                        <a href="#/verify"
-                            class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Для верификатора
-                        </a>
-                        <a href="#/admin"
-                            class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            Администрирование
-                        </a>
+                    <div class="flex items-center">
+                        <div class="hidden md:ml-4 md:flex items-center md:space-x-3">
+                            <div id="network-status" class="network-badge sepolia-badge">
+                                Sepolia Testnet
+                            </div>
+                            <div id="wallet-status" class="hidden">
+                                <div class="flex items-center space-x-2">
+                                    <div class="text-sm">
+                                        <span id="wallet-address" class="font-mono">0x...</span>
+                                    </div>
+                                    <button id="disconnect-wallet" class="text-gray-400 hover:text-gray-500">
+                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                            fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <button id="connect-wallet"
+                                class="wallet-button bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                                Подключить кошелек
+                            </button>
+                            <button id="theme-toggle" title="Переключить тему"
+                                class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 p-2 rounded-lg transition-colors">
+                                <!-- Moon icon light mode -->
+                                <svg id="desktop-theme-moon" class="h-5 w-5 theme-icon"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                                </svg>
+                                <!-- Sun icon dark mode -->
+                                <svg id="desktop-theme-sun" class="h-5 w-5 theme-icon hidden"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="5" fill="currentColor" />
+                                    <rect x="10.5" y="0.5" width="3" height="3" fill="currentColor" />
+                                    <rect x="10.5" y="20.5" width="3" height="3" fill="currentColor" />
+                                    <rect x="0.5" y="10.5" width="3" height="3" fill="currentColor" />
+                                    <rect x="20.5" y="10.5" width="3" height="3" fill="currentColor" />
+                                    <rect x="3" y="3" width="2" height="2" fill="currentColor"
+                                        transform="rotate(45 4 4)" />
+                                    <rect x="19" y="19" width="2" height="2" fill="currentColor"
+                                        transform="rotate(45 20 20)" />
+                                    <rect x="19" y="3" width="2" height="2" fill="currentColor"
+                                        transform="rotate(-45 20 4)" />
+                                    <rect x="3" y="19" width="2" height="2" fill="currentColor"
+                                        transform="rotate(-45 4 20)" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="md:hidden flex items-center space-x-2">
+                            <button id="mobile-theme-toggle-header" title="Переключить тему"
+                                class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 p-2 rounded-lg transition-colors">
+                                <!-- Moon icon light mode -->
+                                <svg id="mobile-theme-moon" class="h-5 w-5 theme-icon"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                                </svg>
+                                <!-- Sun icon dark mode -->
+                                <svg id="mobile-theme-sun" class="h-5 w-5 theme-icon hidden"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="5" fill="currentColor" />
+                                    <rect x="10.5" y="0.5" width="3" height="3" fill="currentColor" />
+                                    <rect x="10.5" y="20.5" width="3" height="3" fill="currentColor" />
+                                    <rect x="0.5" y="10.5" width="3" height="3" fill="currentColor" />
+                                    <rect x="20.5" y="10.5" width="3" height="3" fill="currentColor" />
+                                    <rect x="3" y="3" width="2" height="2" fill="currentColor"
+                                        transform="rotate(45 4 4)" />
+                                    <rect x="19" y="19" width="2" height="2" fill="currentColor"
+                                        transform="rotate(45 20 20)" />
+                                    <rect x="19" y="3" width="2" height="2" fill="currentColor"
+                                        transform="rotate(-45 20 4)" />
+                                    <rect x="3" y="19" width="2" height="2" fill="currentColor"
+                                        transform="rotate(-45 4 20)" />
+                                </svg>
+                            </button>
+                            <button id="mobile-menu-button"
+                                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
+                                <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center">
-                    <div class="hidden md:ml-4 md:flex items-center md:space-x-3">
-                        <div id="network-status" class="network-badge sepolia-badge">
+            </div>
+
+            <!-- Мобильное меню -->
+            <div id="mobile-menu" class="md:hidden hidden">
+                <div class="pt-2 pb-3 space-y-1">
+                    <a href="#/issue"
+                        class="nav-link bg-blue-50 border-primary text-primary block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Для
+                        эмитента</a>
+                    <a href="#/verify"
+                        class="nav-link border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Для
+                        верификатора</a>
+                    <a href="#/admin"
+                        class="nav-link border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Администрирование</a>
+                </div>
+                <div class="pt-4 pb-3 border-t border-gray-200">
+                    <div class="flex items-center justify-between px-4">
+                        <div id="mobile-network-status" class="network-badge sepolia-badge">
                             Sepolia Testnet
                         </div>
-                        <div id="wallet-status" class="hidden">
+                    </div>
+                    <div class="mt-3 space-y-1" id="mobile-wallet-section">
+                        <div id="mobile-wallet-status" class="hidden px-4">
                             <div class="flex items-center space-x-2">
                                 <div class="text-sm">
-                                    <span id="wallet-address" class="font-mono">0x...</span>
+                                    <span id="mobile-wallet-address" class="font-mono">0x...</span>
                                 </div>
-                                <button id="disconnect-wallet" class="text-gray-400 hover:text-gray-500">
+                                <button id="mobile-disconnect-wallet" class="text-gray-400 hover:text-gray-500">
                                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                         fill="currentColor">
                                         <path fill-rule="evenodd"
@@ -435,368 +584,308 @@
                                 </button>
                             </div>
                         </div>
-                        <button id="connect-wallet"
-                            class="wallet-button bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                        <button id="mobile-connect-wallet"
+                            class="wallet-button w-full bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                             Подключить кошелек
                         </button>
-                        <button id="theme-toggle" title="Переключить тему" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 p-2 rounded-lg transition-colors">
-                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1m-16 0H1m15.364 1.636l.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="md:hidden flex items-center">
-                        <button id="mobile-menu-button"
-                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
-                            <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 12h16M4 18h16" />
-                            </svg>
-                        </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </nav>
 
-        <!-- Мобильное меню -->
-        <div id="mobile-menu" class="md:hidden hidden">
-            <div class="pt-2 pb-3 space-y-1">
-                <a href="#/issue"
-                    class="nav-link bg-blue-50 border-primary text-primary block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Для
-                    эмитента</a>
-                <a href="#/verify"
-                    class="nav-link border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Для
-                    верификатора</a>
-                <a href="#/admin"
-                    class="nav-link border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Администрирование</a>
-            </div>
-            <div class="pt-4 pb-3 border-t border-gray-200">
-                <div class="flex items-center justify-between px-4">
-                    <div id="mobile-network-status" class="network-badge sepolia-badge">
-                        Sepolia Testnet
+        <!-- Основное содержимое -->
+        <main class="flex-grow max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <!-- Статус подключения -->
+            <div id="connection-alert" class="hidden mb-6">
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700" id="connection-message">
+                                Пожалуйста, подключите MetaMask для использования приложения.
+                            </p>
+                        </div>
                     </div>
-                    <button id="mobile-theme-toggle" title="Переключить тему" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 p-2 rounded-lg transition-colors">
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1m-16 0H1m15.364 1.636l.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                        </svg>
-                    </button>
                 </div>
-                <div class="mt-3 space-y-1" id="mobile-wallet-section">
-                    <div id="mobile-wallet-status" class="hidden px-4">
-                        <div class="flex items-center space-x-2">
-                            <div class="text-sm">
-                                <span id="mobile-wallet-address" class="font-mono">0x...</span>
-                            </div>
-                            <button id="mobile-disconnect-wallet" class="text-gray-400 hover:text-gray-500">
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
-                                        clip-rule="evenodd" />
-                                </svg>
+            </div>
+
+            <!-- Статус сети -->
+            <div id="network-alert" class="hidden mb-6">
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700" id="network-message">
+                                Пожалуйста, переключитесь на сеть Sepolia для использования приложения.
+                            </p>
+                            <button id="switch-network"
+                                class="mt-2 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                                Переключиться на Sepolia
                             </button>
                         </div>
                     </div>
-                    <button id="mobile-connect-wallet"
-                        class="wallet-button w-full bg-primary hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                        Подключить кошелек
-                    </button>
                 </div>
             </div>
-        </div>
-    </nav>
 
-    <!-- Основное содержимое -->
-    <main class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <!-- Статус подключения -->
-        <div id="connection-alert" class="hidden mb-6">
-            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd"
-                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-yellow-700" id="connection-message">
-                            Пожалуйста, подключите MetaMask для использования приложения.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Статус сети -->
-        <div id="network-alert" class="hidden mb-6">
-            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                            fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd"
-                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-yellow-700" id="network-message">
-                            Пожалуйста, переключитесь на сеть Sepolia для использования приложения.
-                        </p>
-                        <button id="switch-network"
-                            class="mt-2 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
-                            Переключиться на Sepolia
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Статус транзакции -->
-        <div id="transaction-status" class="hidden mb-6">
-            <div class="transaction-status">
-                <div class="flex items-center">
-                    <div class="mr-3">
-                        <div class="loading-spinner"></div>
-                    </div>
-                    <div>
-                        <p id="transaction-message">Отправка транзакции...</p>
-                        <a id="etherscan-link" href="#" target="_blank"
-                            class="text-sm text-blue-600 hover:text-blue-800 hidden">Посмотреть в Etherscan</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Представление для эмитента -->
-        <section id="issuer-view" class="role-section active">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Регистрация документа</h1>
-                <p class="text-gray-600 max-w-2xl mx-auto">Загрузите PDF-документ и введите метаданные для его
-                    регистрации в децентрализованном реестре.</p>
-            </div>
-
-            <div class="bg-white shadow rounded-lg p-6">
-                <form id="register-form" class="space-y-6">
-                    <!-- Загрузка PDF -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-gray-700">
-                            Загрузите PDF-документ
-                        </label>
-                        <div class="mt-1">
-                            <input type="file" id="document-file" accept="application/pdf" class="block w-full text-sm text-gray-500
-                                file:mr-4 file:py-2 file:px-4
-                                file:rounded-md file:border-0
-                                file:text-sm file:font-semibold
-                                file:bg-blue-50 file:text-blue-700
-                                hover:file:bg-blue-100">
+            <!-- Статус транзакции -->
+            <div id="transaction-status" class="hidden mb-6">
+                <div class="transaction-status">
+                    <div class="flex items-center">
+                        <div class="mr-3">
+                            <div class="loading-spinner"></div>
                         </div>
-                        <div id="pdf-preview" class="pdf-preview hidden">
-                            <div class="flex items-center">
-                                <svg class="h-6 w-6 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                <span id="pdf-filename" class="text-gray-700"></span>
-                            </div>
-                            <div class="mt-2 flex justify-between items-center">
-                                <span class="text-sm text-gray-500">Хеш документа:</span>
-                                <span id="document-hash" class="hash-display text-xs text-gray-700"></span>
-                            </div>
+                        <div>
+                            <p id="transaction-message">Отправка транзакции...</p>
+                            <a id="etherscan-link" href="#" target="_blank"
+                                class="text-sm text-blue-600 hover:text-blue-800 hidden">Посмотреть в Etherscan</a>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <!-- Метаданные -->
-                    <div class="space-y-4">
-                        <h2 class="text-lg font-medium text-gray-900">Метаданные документа</h2>
-                        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-                            <div class="sm:col-span-1">
-                                <label for="student-name" class="block text-sm font-medium text-gray-700">
-                                    Имя студента
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" id="student-name" name="student-name"
-                                        class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                                        placeholder="Иван Петров">
-                                </div>
+            <!-- Контейнер для уведомлений -->
+            <div id="notification-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+            <!-- Представление для эмитента -->
+            <section id="issuer-view" class="role-section active">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Регистрация документа</h1>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Загрузите PDF-документ и введите метаданные для его
+                        регистрации в децентрализованном реестре.</p>
+                </div>
+
+                <div class="bg-white shadow rounded-lg p-6">
+                    <form id="register-form" class="space-y-6">
+                        <!-- Загрузка PDF -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Загрузите PDF-документ
+                            </label>
+                            <div class="mt-1">
+                                <input type="file" id="document-file" accept="application/pdf" class="block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-md file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-blue-50 file:text-blue-700
+                                    hover:file:bg-blue-100">
                             </div>
-
-                            <div class="sm:col-span-1">
-                                <label for="document-number" class="block text-sm font-medium text-gray-700">
-                                    Номер документа
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" id="document-number" name="document-number"
-                                        class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                                        placeholder="DIP-12345">
+                            <div id="pdf-preview" class="pdf-preview hidden">
+                                <div class="flex items-center">
+                                    <svg class="h-6 w-6 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <span id="pdf-filename" class="text-gray-700"></span>
                                 </div>
-                            </div>
-
-                            <div class="sm:col-span-2">
-                                <label for="institution" class="block text-sm font-medium text-gray-700">
-                                    Учебное заведение
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" id="institution" name="institution"
-                                        class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                                        placeholder="Государственный университет">
-                                </div>
-                            </div>
-
-                            <div class="sm:col-span-1">
-                                <label for="issue-date" class="block text-sm font-medium text-gray-700">
-                                    Дата выдачи
-                                </label>
-                                <div class="mt-1">
-                                    <input type="date" id="issue-date" name="issue-date"
-                                        class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                                <div class="mt-2 flex justify-between items-center">
+                                    <span class="text-sm text-gray-500">Хеш документа:</span>
+                                    <span id="document-hash" class="hash-display text-xs text-gray-700"></span>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Кнопка регистрации -->
-                    <div>
-                        <button type="submit" id="register-button"
-                            class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled>
-                            Зарегистрировать документ
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </section>
+                        <!-- Метаданные -->
+                        <div class="space-y-4">
+                            <h2 class="text-lg font-medium text-gray-900">Метаданные документа</h2>
+                            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                                <div class="sm:col-span-1">
+                                    <label for="student-name" class="block text-sm font-medium text-gray-700">
+                                        Имя студента
+                                    </label>
+                                    <div class="mt-1">
+                                        <input type="text" id="student-name" name="student-name"
+                                            class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                                            placeholder="Иван Петров">
+                                    </div>
+                                </div>
 
-        <!-- Представление для верификатора -->
-        <section id="verifier-view" class="role-section hidden">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Верификация документа</h1>
-                <p class="text-gray-600 max-w-2xl mx-auto">Загрузите PDF-документ для проверки его подлинности в
-                    децентрализованном реестре.</p>
-            </div>
+                                <div class="sm:col-span-1">
+                                    <label for="document-number" class="block text-sm font-medium text-gray-700">
+                                        Номер документа
+                                    </label>
+                                    <div class="mt-1">
+                                        <input type="text" id="document-number" name="document-number"
+                                            class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                                            placeholder="DIP-12345">
+                                    </div>
+                                </div>
 
-            <div class="bg-white shadow rounded-lg p-6">
-                <form id="verify-form" class="space-y-6">
-                    <!-- Загрузка PDF -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-gray-700">
-                            Загрузите PDF-документ для проверки
-                        </label>
-                        <div class="mt-1">
-                            <input type="file" id="verify-file" accept="application/pdf" class="block w-full text-sm text-gray-500
-                                file:mr-4 file:py-2 file:px-4
-                                file:rounded-md file:border-0
-                                file:text-sm file:font-semibold
-                                file:bg-blue-50 file:text-blue-700
-                                hover:file:bg-blue-100">
-                        </div>
-                        <div id="verify-pdf-preview" class="pdf-preview hidden">
-                            <div class="flex items-center">
-                                <svg class="h-6 w-6 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                <span id="verify-filename" class="text-gray-700"></span>
-                            </div>
-                            <div class="mt-2 flex justify-between items-center">
-                                <span class="text-sm text-gray-500">Хеш документа:</span>
-                                <span id="verify-document-hash" class="hash-display text-xs text-gray-700"></span>
-                            </div>
-                        </div>
-                    </div>
+                                <div class="sm:col-span-2">
+                                    <label for="institution" class="block text-sm font-medium text-gray-700">
+                                        Учебное заведение
+                                    </label>
+                                    <div class="mt-1">
+                                        <input type="text" id="institution" name="institution"
+                                            class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                                            placeholder="Государственный университет">
+                                    </div>
+                                </div>
 
-                    <!-- Кнопка проверки -->
-                    <div>
-                        <button type="submit" id="verify-button"
-                            class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled>
-                            Проверить документ
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Результат проверки -->
-                <div id="verification-result" class="hidden mt-8">
-                    <div class="bg-gray-50 rounded-lg p-6">
-                        <div class="text-center mb-6">
-                            <div id="verification-status"
-                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4">
-                                <!-- Статус будет вставлен здесь -->
-                            </div>
-                            <h2 id="verification-title" class="text-2xl font-bold"></h2>
-                        </div>
-
-                        <div id="verification-details" class="space-y-3">
-                            <!-- Детали документа будут вставлены здесь -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Представление для администратора -->
-        <section id="admin-view" class="role-section hidden">
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Управление эмитентами</h1>
-                <p class="text-gray-600 max-w-2xl mx-auto">Добавляйте и удаляйте эмитенты, которые имеют право
-                    регистрировать документы в системе.</p>
-            </div>
-
-            <div class="bg-white shadow rounded-lg p-6">
-                <div class="space-y-6">
-                    <!-- Добавление эмитента -->
-                    <div>
-                        <h2 class="text-lg font-medium text-gray-900 mb-4">Добавить нового эмитента</h2>
-                        <form id="add-issuer-form" class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                            <div class="sm:col-span-4">
-                                <label for="new-issuer-address" class="block text-sm font-medium text-gray-700">
-                                    Адрес кошелька
-                                </label>
-                                <div class="mt-1">
-                                    <input type="text" id="new-issuer-address" name="new-issuer-address"
-                                        class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                                        placeholder="0x...">
+                                <div class="sm:col-span-1">
+                                    <label for="issue-date" class="block text-sm font-medium text-gray-700">
+                                        Дата выдачи
+                                    </label>
+                                    <div class="mt-1">
+                                        <input type="date" id="issue-date" name="issue-date"
+                                            class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="sm:col-span-2 flex items-end">
-                                <button type="submit" id="add-issuer-button"
-                                    class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                    Добавить эмитента
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
 
-                    <div class="border-t border-gray-200 pt-6">
-                        <h2 class="text-lg font-medium text-gray-900 mb-4">Список эмитентов</h2>
-                        <div id="issuers-list" class="space-y-3">
-                            <!-- Список эмитентов будет загружен здесь -->
-                            <div class="text-center py-8 text-gray-500">
-                                <div class="loading-spinner mx-auto mb-3"></div>
-                                <p>Загрузка списка эмитентов...</p>
+                        <!-- Кнопка регистрации -->
+                        <div>
+                            <button type="submit" id="register-button"
+                                class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled>
+                                Зарегистрировать документ
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Представление для верификатора -->
+            <section id="verifier-view" class="role-section hidden">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Верификация документа</h1>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Загрузите PDF-документ для проверки его подлинности в
+                        децентрализованном реестре.</p>
+                </div>
+
+                <div class="bg-white shadow rounded-lg p-6">
+                    <form id="verify-form" class="space-y-6">
+                        <!-- Загрузка PDF -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Загрузите PDF-документ для проверки
+                            </label>
+                            <div class="mt-1">
+                                <input type="file" id="verify-file" accept="application/pdf" class="block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-md file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-blue-50 file:text-blue-700
+                                    hover:file:bg-blue-100">
+                            </div>
+                            <div id="verify-pdf-preview" class="pdf-preview hidden">
+                                <div class="flex items-center">
+                                    <svg class="h-6 w-6 text-blue-500 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <span id="verify-filename" class="text-gray-700"></span>
+                                </div>
+                                <div class="mt-2 flex justify-between items-center">
+                                    <span class="text-sm text-gray-500">Хеш документа:</span>
+                                    <span id="verify-document-hash" class="hash-display text-xs text-gray-500"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Кнопка проверки -->
+                        <div>
+                            <button type="submit" id="verify-button"
+                                class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled>
+                                Проверить документ
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Результат проверки -->
+                    <div id="verification-result" class="hidden mt-8">
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <div class="text-center mb-6">
+                                <div id="verification-status"
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4">
+                                    <!-- Статус будет вставлен здесь -->
+                                </div>
+                                <h2 id="verification-title" class="text-2xl font-bold"></h2>
+                            </div>
+
+                            <div id="verification-details" class="space-y-3">
+                                <!-- Детали документа будут вставлены здесь -->
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
 
-    <!-- Подвал -->
-    <footer class="bg-white border-t border-gray-200">
-        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <p class="text-gray-500">&copy; 2026 DocumentChain. Дипломный проект по децентрализованным системам
-                    верификации документов.</p>
-            </div>
-        </div>
-    </footer>
+            <!-- Представление для администратора -->
+            <section id="admin-view" class="role-section hidden">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Управление эмитентами</h1>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Добавляйте и удаляйте эмитенты, которые имеют право
+                        регистрировать документы в системе.</p>
+                </div>
 
+                <div class="bg-white shadow rounded-lg p-6">
+                    <div class="space-y-6">
+                        <!-- Добавление эмитента -->
+                        <div>
+                            <h2 class="text-lg font-medium text-gray-900 mb-4">Добавить нового эмитента</h2>
+                            <form id="add-issuer-form" class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                                <div class="sm:col-span-4">
+                                    <label for="new-issuer-address" class="block text-sm font-medium text-gray-700">
+                                        Адрес кошелька
+                                    </label>
+                                    <div class="mt-1">
+                                        <input type="text" id="new-issuer-address" name="new-issuer-address"
+                                            class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                                            placeholder="0x...">
+                                    </div>
+                                </div>
+                                <div class="sm:col-span-2 flex items-end">
+                                    <button type="submit" id="add-issuer-button"
+                                        class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                        Добавить эмитента
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="border-t border-gray-200 pt-6">
+                            <h2 class="text-lg font-medium text-gray-900 mb-4">Список эмитентов</h2>
+                            <div id="issuers-list" class="space-y-3">
+                                <!-- Список эмитентов будет загружен здесь -->
+                                <div class="text-center py-8 text-gray-500">
+                                    <div class="loading-spinner mx-auto mb-3"></div>
+                                    <p>Загрузка списка эмитентов...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Подвал -->
+        <footer class="bg-white border-t border-gray-200 mt-auto">
+            <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <p class="text-gray-500">&copy; 2026 DocumentChain. Дипломный проект по децентрализованным системам
+                        верификации документов.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
     <!-- Скрипты -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.15.0/ethers.umd.min.js"></script>
     <script>
@@ -1049,6 +1138,70 @@
         let verifyDocumentHash = null;
         let currentRpcUrl = null; // Текущий рабочий RPC URL
 
+        // Функция для показа стилизованных уведомлений
+        function showNotification(message, type = 'info', duration = 5000) {
+            const container = document.getElementById('notification-container');
+            
+            // Защита от null контейнера
+            if (!container) {
+                console.warn('notification-container не найден, используем console вместо:', message);
+                return;
+            }
+            
+            const notification = document.createElement('div');
+
+            let bgColor, textColor, borderColor, icon;
+
+            switch (type) {
+                case 'success':
+                    bgColor = 'bg-green-50';
+                    textColor = 'text-green-800';
+                    borderColor = 'border-green-200';
+                    icon = '<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+                    break;
+                case 'error':
+                    bgColor = 'bg-red-50';
+                    textColor = 'text-red-800';
+                    borderColor = 'border-red-200';
+                    icon = '<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
+                    break;
+                case 'warning':
+                    bgColor = 'bg-yellow-50';
+                    textColor = 'text-yellow-700';
+                    borderColor = 'border-yellow-200';
+                    icon = '<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>';
+                    break;
+                default: // info
+                    bgColor = 'bg-blue-50';
+                    textColor = 'text-blue-800';
+                    borderColor = 'border-blue-200';
+                    icon = '<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>';
+            }
+
+            notification.className = `${bgColor} border-l-4 ${borderColor} p-4 rounded shadow-md flex items-start animate-slideIn`;
+            notification.innerHTML = `
+                <div class="flex-shrink-0 ${textColor} mr-3">
+                    ${icon}
+                </div>
+                <div class="flex-1">
+                    <p class="${textColor} text-sm">${message}</p>
+                </div>
+                <button class="ml-3 ${textColor} hover:opacity-75" onclick="this.parentElement.parentElement.remove()">
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            `;
+
+            container.appendChild(notification);
+
+            if (duration > 0) {
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, duration);
+            }
+        }
+
         // Инициализация приложения
         document.addEventListener('DOMContentLoaded', function () {
             // Проверяем наличие MetaMask
@@ -1069,8 +1222,48 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('issue-date').value = today;
 
+            // Пытаемся восстановить подключение при загрузке страницы
+            attemptAutoReconnect();
+
             updateActiveView();
         });
+
+        // Функция для автоматического восстановления подключения при загрузке страницы
+        async function attemptAutoReconnect() {
+            if (typeof window.ethereum === 'undefined') {
+                return; // MetaMask не установлен
+            }
+
+            try {
+                // Проверяем, есть ли уже подключенные аккаунты
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+
+                if (accounts && accounts.length > 0) {
+                    console.log('Найдены подключенные аккаунты, восстанавливаю подключение...');
+                    // Автоматически переподключаемся
+                    userAddress = accounts[0];
+                    isConnected = true;
+
+                    // Инициализируем provider
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    signer = await provider.getSigner();
+                    contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+                    // Проверяем сеть
+                    await checkNetwork();
+
+                    // Обновляем UI
+                    updateWalletUI();
+
+                    // Проверяем роль пользователя
+                    await checkUserRole();
+
+                    console.log('Подключение восстановлено автоматически');
+                }
+            } catch (error) {
+                console.warn('Ошибка при автоматическом восстановлении подключения:', error);
+            }
+        }
 
         // Проверка наличия MetaMask
         function checkMetaMask() {
@@ -1454,51 +1647,13 @@
         // Обновление UI в зависимости от роли
         function updateRoleUI() {
             console.log('Обновляю UI для роли:', userRole);
-            
-            // Скрываем все разделы
-            document.querySelectorAll('.role-section').forEach(section => {
-                section.classList.remove('active');
-                section.style.display = 'none';
-            });
-
-            // Показываем разделы в зависимости от роли
-            switch(userRole) {
-                case 'owner':
-                    console.log('  OWNER: показываю все 3 вкладки');
-                    // Owner видит все 3 вкладки
-                    document.getElementById('issuer-view').classList.add('active');
-                    document.getElementById('issuer-view').style.display = 'block';
-                    document.getElementById('verifier-view').classList.add('active');
-                    document.getElementById('verifier-view').style.display = 'block';
-                    document.getElementById('admin-view').classList.add('active');
-                    document.getElementById('admin-view').style.display = 'block';
-                    loadIssuersList();
-                    // По умолчанию показываем issuer-view для owner
-                    window.location.hash = '#/issue';
-                    break;
-                    
-                case 'issuer':
-                    console.log('  ISSUER: показываю регистрацию и верификацию');
-                    // Issuer видит регистрацию и верификацию
-                    document.getElementById('issuer-view').classList.add('active');
-                    document.getElementById('issuer-view').style.display = 'block';
-                    document.getElementById('verifier-view').classList.add('active');
-                    document.getElementById('verifier-view').style.display = 'block';
-                    // По умолчанию показываем issuer-view для issuer
-                    window.location.hash = '#/issue';
-                    break;
-                    
-                case 'verifier':
-                default:
-                    console.log('  VERIFIER: показываю только верификацию');
-                    // Verifier видит только верификацию
-                    document.getElementById('verifier-view').classList.add('active');
-                    document.getElementById('verifier-view').style.display = 'block';
-                    // По умолчанию показываем verifier-view
-                    window.location.hash = '#/verify';
-                    break;
+            // Роль определяет доступные вкладки, но не показывает их все сразу
+            // Показ вкладок осуществляется через updateActiveView при навигации
+            if (userRole === 'owner') {
+                loadIssuersList();
             }
-            
+            // После установки роли переходим на первую доступную вкладку
+            updateActiveView();
             console.log('UI обновлен для роли:', userRole);
         }
 
@@ -1558,6 +1713,38 @@
             localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
         }
 
+        function updateThemeIcons() {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+
+            // Обновляем мобильные иконки
+            const mobileMoonIcon = document.getElementById('mobile-theme-moon');
+            const mobileSunIcon = document.getElementById('mobile-theme-sun');
+
+            if (mobileMoonIcon && mobileSunIcon) {
+                if (isDarkMode) {
+                    mobileMoonIcon.classList.add('hidden');
+                    mobileSunIcon.classList.remove('hidden');
+                } else {
+                    mobileMoonIcon.classList.remove('hidden');
+                    mobileSunIcon.classList.add('hidden');
+                }
+            }
+
+            // Обновляем десктопные иконки
+            const desktopMoonIcon = document.getElementById('desktop-theme-moon');
+            const desktopSunIcon = document.getElementById('desktop-theme-sun');
+
+            if (desktopMoonIcon && desktopSunIcon) {
+                if (isDarkMode) {
+                    desktopMoonIcon.classList.add('hidden');
+                    desktopSunIcon.classList.remove('hidden');
+                } else {
+                    desktopMoonIcon.classList.remove('hidden');
+                    desktopSunIcon.classList.add('hidden');
+                }
+            }
+        }
+
         function initTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             if (savedTheme === 'dark') {
@@ -1565,6 +1752,7 @@
             } else {
                 document.body.classList.remove('dark-mode');
             }
+            updateThemeIcons();
         }
 
         // Инициализация обработчиков событий
@@ -1626,9 +1814,21 @@
             });
 
             // Переключатель темы
-            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-            if (document.getElementById('mobile-theme-toggle')) {
-                document.getElementById('mobile-theme-toggle').addEventListener('click', toggleTheme);
+            const themeToggle = document.getElementById('theme-toggle');
+            const mobileThemeToggle = document.getElementById('mobile-theme-toggle-header');
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function () {
+                    toggleTheme();
+                    updateThemeIcons();
+                });
+            }
+
+            if (mobileThemeToggle) {
+                mobileThemeToggle.addEventListener('click', function () {
+                    toggleTheme();
+                    updateThemeIcons();
+                });
             }
 
             // Инициализация темы при загрузке страницы
@@ -1639,7 +1839,7 @@
         async function handleFileUpload(event, isRegister) {
             const file = event.target.files[0];
             if (!file || file.type !== 'application/pdf') {
-                alert('Пожалуйста, загрузите PDF-файл.');
+                showNotification('Пожалуйста, загрузите PDF-файл.', 'warning');
                 return;
             }
 
@@ -1671,7 +1871,7 @@
                 }
             } catch (error) {
                 console.error('Ошибка вычисления хеша:', error);
-                alert('Ошибка при обработке файла. Пожалуйста, попробуйте снова.');
+                showNotification('Ошибка при обработке файла. Пожалуйста, попробуйте снова.', 'error');
             }
         }
 
@@ -1699,7 +1899,7 @@
         // Регистрация документа
         async function registerDocument() {
             if (!documentHash) {
-                alert('Пожалуйста, загрузите PDF-файл.');
+                showNotification('Пожалуйста, загрузите PDF-файл.', 'warning');
                 return;
             }
 
@@ -1709,7 +1909,7 @@
             const issueDate = document.getElementById('issue-date').value;
 
             if (!studentName || !documentNumber || !institution || !issueDate) {
-                alert('Пожалуйста, заполните все поля метаданных.');
+                showNotification('Пожалуйста, заполните все поля метаданных.', 'warning');
                 return;
             }
 
@@ -1736,7 +1936,7 @@
                 // Ожидаем подтверждения
                 showTransactionStatus('Ожидание подтверждения транзакции...');
                 const receipt = await tx.wait();
-                
+
                 // Успех
                 showTransactionStatus('Документ успешно зарегистрирован в блокчейне!', 'success');
                 document.getElementById('etherscan-link').href = etherscanLink;
@@ -1762,7 +1962,14 @@
         // Проверка документа
         async function verifyDocument() {
             if (!verifyDocumentHash) {
-                alert('Пожалуйста, загрузите PDF-файл.');
+                showNotification('Пожалуйста, загрузите PDF-файл.', 'warning');
+                return;
+            }
+
+            // Проверяем, инициализирован ли контракт
+            if (!contract) {
+                showNotification('Кошелек не подключен. Пожалуйста, подключите MetaMask.', 'error');
+                hideTransactionStatus();
                 return;
             }
 
@@ -1770,8 +1977,13 @@
             showTransactionStatus('Проверка документа в блокчейне...');
 
             try {
-                // Вызываем функцию verifyDocument
-                const result = await contract.verifyDocument(verifyDocumentHash);
+                // Вызываем функцию verifyDocument с таймаутом
+                const verifyPromise = contract.verifyDocument(verifyDocumentHash);
+                const timeoutPromise = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Проверка документа заняла слишком много времени. Проверьте интернет-соединение.')), 30000)
+                );
+
+                const result = await Promise.race([verifyPromise, timeoutPromise]);
 
                 const [exists, issuer, metadata, timestamp, isActive] = result;
 
@@ -1896,7 +2108,7 @@
                             </div>
                         </div>
                         <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
-                            <p class="text-sm text-green-800">Этот документ зарегистрирован в децентрализованном реестре и является действительным.</p>
+                            <p class="text-sm text-green-700">Этот документ зарегистрирован в децентрализованном реестре и является действительным.</p>
                         </div>
                     `;
                 }
@@ -1930,7 +2142,7 @@
             const newIssuerAddress = document.getElementById('new-issuer-address').value.trim();
 
             if (!ethers.isAddress(newIssuerAddress)) {
-                alert('Пожалуйста, введите корректный адрес Ethereum.');
+                showNotification('Пожалуйста, введите корректный адрес Ethereum.', 'warning');
                 return;
             }
 
@@ -1992,9 +2204,7 @@
                 // Получаем владельца контракта
                 const owner = await contract.owner();
 
-                // Для простоты, предположим, что мы можем получить список эмитентов через событие
-                // В реальности, контракт не предоставляет прямого способа получения всех эмитентов
-                // Поэтому мы будем использовать события IssuerAdded и IssuerRemoved
+                // Получаем список эмитентов
                 const filter = contract.filters.IssuerAdded();
                 const events = await contract.queryFilter(filter);
 
@@ -2141,24 +2351,54 @@
                 section.style.display = 'none';
             });
 
-            // Показываем нужную секцию
-            if (hash === '#/issue' && (userRole === 'issuer' || userRole === 'owner' || !isConnected)) {
-                document.getElementById('issuer-view').classList.add('active');
-                document.getElementById('issuer-view').style.display = 'block';
+            // Проверяем доступность вкладки для текущей роли
+            let hasAccess = false;
+            let targetSection = null;
+
+            if (hash === '#/issue') {
+                if (isConnected && (userRole === 'issuer' || userRole === 'owner')) {
+                    hasAccess = true;
+                    targetSection = document.getElementById('issuer-view');
+                }
             } else if (hash === '#/verify') {
-                document.getElementById('verifier-view').classList.add('active');
-                document.getElementById('verifier-view').style.display = 'block';
-            } else if (hash === '#/admin' && userRole === 'owner') {
-                document.getElementById('admin-view').classList.add('active');
-                document.getElementById('admin-view').style.display = 'block';
-            } else {
-                // По умолчанию показываем форму для верификатора
-                document.getElementById('verifier-view').classList.add('active');
-                document.getElementById('verifier-view').style.display = 'block';
-                if (window.location.hash !== '#/verify') {
-                    window.location.hash = '#/verify';
+                hasAccess = true;
+                targetSection = document.getElementById('verifier-view');
+            } else if (hash === '#/admin') {
+                if (isConnected && userRole === 'owner') {
+                    hasAccess = true;
+                    targetSection = document.getElementById('admin-view');
                 }
             }
+
+            // Если нет доступа к вкладке, показываем сообщение и переходим на доступную
+            if (!hasAccess) {
+                if (hash !== '#/verify' && hash !== '#/issue' && hash !== '#/admin') {
+                    // Неизвестная вкладка - показываем верификацию
+                    document.getElementById('verifier-view').classList.add('active');
+                    document.getElementById('verifier-view').style.display = 'block';
+                    window.location.hash = '#/verify';
+                } else {
+                    // Известная вкладка, но нет доступа
+                    showNotification('У вас нет доступа к этой вкладке. Требуемая роль: ' + (hash === '#/admin' ? 'владелец контракта' : 'эмитент'), 'warning');
+                    // Переходим на доступную вкладку
+                    if (userRole === 'verifier') {
+                        document.getElementById('verifier-view').classList.add('active');
+                        document.getElementById('verifier-view').style.display = 'block';
+                        window.location.hash = '#/verify';
+                    } else if (userRole === 'issuer') {
+                        document.getElementById('issuer-view').classList.add('active');
+                        document.getElementById('issuer-view').style.display = 'block';
+                        window.location.hash = '#/issue';
+                    }
+                }
+            } else if (targetSection) {
+                // Есть доступ - показываем вкладку
+                targetSection.classList.add('active');
+                targetSection.style.display = 'block';
+            }
+
+            // Скрываем статус транзакции при переключении вкладок
+            hideTransactionStatus();
 
             // Обновляем активные ссылки в навигации
             document.querySelectorAll('.nav-link').forEach(link => {
@@ -2196,7 +2436,30 @@
                 transactionStatus.classList.add('transaction-error');
             }
 
-            transactionMessage.textContent = message;
+            // Обновляем HTML содержимое с иконкой в зависимости от статуса
+            let icon = '';
+            if (status === 'pending') {
+                icon = '<div class="spinner-container"><div class="loading-spinner"></div></div>';
+            } else if (status === 'success') {
+                icon = '<svg class="check-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+            }
+
+            // Безопасно получаем ссылку на Etherscan
+            const etherscanLink = document.getElementById('etherscan-link');
+            let etherscanHtml = '';
+            if (etherscanLink && etherscanLink.href && !etherscanLink.classList.contains('hidden')) {
+                etherscanHtml = `<a href="${etherscanLink.href}" target="_blank" class="text-sm text-blue-600 hover:text-blue-800">Посмотреть в Etherscan</a>`;
+            }
+
+            transactionStatus.innerHTML = `
+                <div class="flex items-center">
+                    ${icon}
+                    <div>
+                        <p>${message}</p>
+                        ${etherscanHtml}
+                    </div>
+                </div>
+            `;
             transactionStatus.classList.remove('hidden');
         }
 
