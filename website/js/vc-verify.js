@@ -7,14 +7,14 @@
  *   - window.VCUtils   (vc-utils.js, must be loaded first)
  *   - ethers v6        (CDN global)
  *
- * Checks (per CLAUDE.md verification rules):
- *   1. signature    — recover signer from proof.proofValue, compare to issuer DID address
+ * Проверяет 5 условий:
+ *   1. signature    — восстановление подписавшего из proof.proofValue, сравнение с DID эмитента
  *   2. issuerTrusted — contract.isIssuer(issuerAddress) === true
  *   3. notRevoked   — contract.checkRevocation(vc.id) === false
- *   4. notExpired   — vc.validUntil > now  (if validUntil is set)
+ *   4. notExpired   — vc.validUntil > now (если поле задано)
  *   5. fileHash     — SHA-256(pdfFile) === credentialSubject.fileHash
  *
- * Usage in Phase 4:
+ * Пример использования:
  *
  *   const vc  = await VCStorage.parseVCFile(vcJsonFile);
  *   const res = await VCVerify.verifyVC(vc, pdfFile, contract);

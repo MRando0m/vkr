@@ -3,21 +3,21 @@
  *
  * Exposes: window.VCStorage
  *
- * Storage strategy (per CLAUDE.md):
- *   Primary   → downloadVC()      — triggers a browser file-save dialog.
- *   Auxiliary → saveToIndexedDB() — in-browser cache for UX convenience.
- *   Forbidden → localStorage      — NOT used for VC data.
+ * Стратегия хранения:
+ *   Основное  → downloadVC()      — сохранение файла через диалог браузера.
+ *   Кэш       → saveToIndexedDB() — вспомогательный кэш для UX.
+ *   Запрещено → localStorage      — не используется для данных VC.
  *
- * No dependencies beyond standard browser APIs.
+ * Нет зависимостей кроме стандартных браузерных API.
  *
- * Usage in Phase 4 (issue flow):
+ * Использование (выпуск):
  *
- *   VCStorage.downloadVC(vc);               // give the file to the student
- *   await VCStorage.saveToIndexedDB(vc);    // cache for this session
+ *   VCStorage.downloadVC(vc);               // сохранить файл VC студенту
+ *   await VCStorage.saveToIndexedDB(vc);    // кэшировать в браузере
  *
- * Usage in Phase 4 (verify flow):
+ * Использование (верификация):
  *
- *   const vc = await VCStorage.parseVCFile(vcJsonFile); // parse uploaded .json
+ *   const vc = await VCStorage.parseVCFile(vcJsonFile); // разобрать загруженный .json
  */
 (function (global) {
     'use strict';

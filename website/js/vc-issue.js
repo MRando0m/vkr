@@ -8,7 +8,7 @@
  *   - ethers v6        (CDN global)
  *   - window.ethereum  (MetaMask)
  *
- * Usage in Phase 4:
+ * Пример использования:
  *
  *   const { vc, credentialId } = await VCIssue.issueVC({
  *       issuerAddress,

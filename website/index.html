@@ -442,8 +442,8 @@
         /* ── Form cards — стабилизированное визуальное выделение в light mode ─────
            Применяется к 4-м основным формам: выпуск VC, верификация,
            отзыв credential, добавление эмитента.
-           В dark mode уже работают существующие правила body.dark-mode .bg-white,
-           тут лишь усиливаем рамку, чтобы карточки не сливались с фоном. */
+           В dark mode работают существующие правила body.dark-mode .bg-white,
+           тут усиливаем рамку, чтобы карточки не сливались с фоном. */
         .form-card {
             background-color: #ffffff;
             border: 1px solid #c8d5e4;       /* slate-300 / усиленная граница */
@@ -465,7 +465,7 @@
             font-weight: 500;
         }
 
-        /* Поля ввода внутри карточек — заметная граница, чёткий focus */
+        /* Поля ввода внутри карточек */
         .form-card input[type="text"],
         .form-card input[type="email"],
         .form-card input[type="number"],
@@ -507,7 +507,7 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
         }
 
-        /* Dark mode: усиливаем границу, чтобы карточка отделялась от фона страницы */
+        /* Dark mode */
         body.dark-mode .form-card {
             background-color: var(--bg-secondary);
             border-color: #334155;           /* slate-700 */
@@ -566,7 +566,7 @@
         }
 
         body.dark-mode .revoke-card {
-            border-left-color: #d97706;      /* amber-600 — более читаемый на тёмном фоне */
+            border-left-color: #d97706;      /* amber-600 */
         }
 
         /* ── Trust note — мягкое предупреждение для критических действий ─── */
@@ -587,7 +587,7 @@
             border-color: #78350f;
         }
 
-        /* ── Alert blocks — скруглённые карточки вместо голых полос ────────── */
+        /* ── Alert blocks  ─────────────────────────────────────────────────── */
         #connection-alert > div,
         #network-alert > div {
             border-radius: 0.5rem;
@@ -618,7 +618,7 @@
 
         /* ── Active nav tab in dark mode ────────────────────────────────────── */
         body.dark-mode .nav-link.border-primary {
-            color: #93c5fd;           /* blue-300 — яркий для тёмного фона */
+            color: #93c5fd;           /* blue-300 для тёмного фона */
             border-color: #60a5fa;    /* blue-400 */
             background-color: rgba(30, 64, 175, 0.15);
         }
@@ -1258,14 +1258,14 @@
     <!-- Скрипты -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.15.0/ethers.umd.min.js"></script>
 
-    <!-- Phase 3: VC 2.0 layer — load order matters (utils first) -->
+    <!-- VC 2.0 layer — порядок загрузки важен (utils первый) -->
     <script src="js/vc-utils.js"></script>
     <script src="js/vc-issue.js"></script>
     <script src="js/vc-verify.js"></script>
     <script src="js/vc-storage.js"></script>
 
     <script>
-        // ABI контракта VCRegistry (Phase 2 migration)
+        // ABI контракта VCRegistry
         const contractABI = [
             {
                 "inputs": [{ "internalType": "address[]", "name": "_initialIssuers", "type": "address[]" }],
@@ -1473,7 +1473,7 @@
                     borderColor = 'border-yellow-200';
                     icon = '<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>';
                     break;
-                default: // info
+                default:
                     bgColor = 'bg-blue-50';
                     textColor = 'text-blue-800';
                     borderColor = 'border-blue-200';
@@ -2667,7 +2667,7 @@
             resultSection.classList.remove('hidden');
         }
 
-        // Верификация VC (заменяет verifyDocument)
+        // Верификация VC
         async function verifyDocumentVC() {
             if (!currentVCForVerification) {
                 showNotification('Загрузите файл VC (JSON).', 'warning');

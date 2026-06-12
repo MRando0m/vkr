@@ -2,11 +2,11 @@ import { expect } from "chai";
 import { network } from "hardhat";
 
 /**
- * Tests for VCRegistry — phase 2.
+ * Тесты контракта VCRegistry.
  *
- * credentialId is computed as:
+ * credentialId вычисляется как:
  *   keccak256(abi.encodePacked(issuerAddress, holderAddress, fileHash))
- * This mirrors the off-chain computation done in the VC layer (phase 3).
+ * Совпадает с вычислением в VC-слое на стороне браузера.
  */
 describe("VCRegistry", function () {
     let registry, ethers;

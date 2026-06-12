@@ -1,14 +1,9 @@
 /**
- * VC-layer unit tests — Phase 5.
+ * Юнит-тесты VC-слоя (vc-utils.js, vc-issue.js, vc-verify.js).
  *
- * Tests pure functions from vc-utils.js and vc-issue.js.
- * The browser modules are IIFEs that attach to `window` and cannot be
- * directly imported in Node. Functions under test are re-implemented inline
- * using the SAME algorithm. Divergence from the source files would cause
- * failures — that is the intended guard.
- *
- * No additional test frameworks are required beyond chai + ethers v6,
- * which are already present in devDependencies.
+ * Браузерные IIFE-модули нельзя импортировать в Node напрямую,
+ * поэтому функции воспроизведены inline с тем же алгоритмом —
+ * расхождение с исходными файлами приведёт к провалу тестов.
  */
 import { expect } from "chai";
 import { ethers } from "ethers";
