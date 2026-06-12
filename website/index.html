@@ -149,10 +149,15 @@
             display: inline-block;
             width: 1rem;
             height: 1rem;
-            border: 2px solid #ffffff;
-            border-top-color: #1e293b;
+            border: 2px solid rgba(0, 0, 0, 0.12);
+            border-top-color: #2563eb;
             border-radius: 50%;
             animation: spin 1s linear infinite;
+        }
+
+        body.dark-mode .loading-spinner {
+            border-color: rgba(255, 255, 255, 0.15);
+            border-top-color: #60a5fa;
         }
 
         @keyframes spin {
@@ -162,14 +167,14 @@
         }
 
         :root {
-            --bg-primary: #f8fafc;
+            --bg-primary: #eef2f7;
             --bg-secondary: #ffffff;
             --text-primary: #1e293b;
             --text-secondary: #64748b;
             --border-color: #e2e8f0;
             --nav-bg: #ffffff;
             --input-bg: #ffffff;
-            --input-border: #cbd5e1;
+            --input-border: #94a3b8;
             --shadow-color: rgba(0, 0, 0, 0.1);
         }
 
@@ -327,6 +332,11 @@
             background-color: var(--bg-secondary);
         }
 
+        body.dark-mode .pdf-preview {
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color);
+        }
+
         body.dark-mode .text-gray-900 {
             color: #f1f5f9;
         }
@@ -428,10 +438,204 @@
         .animate-slideIn {
             animation: slideIn 0.3s ease-out;
         }
+
+        /* ── Form cards — стабилизированное визуальное выделение в light mode ─────
+           Применяется к 4-м основным формам: выпуск VC, верификация,
+           отзыв credential, добавление эмитента.
+           В dark mode уже работают существующие правила body.dark-mode .bg-white,
+           тут лишь усиливаем рамку, чтобы карточки не сливались с фоном. */
+        .form-card {
+            background-color: #ffffff;
+            border: 1px solid #c8d5e4;       /* slate-300 / усиленная граница */
+            border-radius: 0.75rem;
+            box-shadow:
+                0 1px 3px 0 rgba(15, 23, 42, 0.06),
+                0 6px 16px -4px rgba(15, 23, 42, 0.10);
+        }
+
+        .form-card h2 {
+            color: #0f172a;                  /* slate-900 */
+            font-size: 1.125rem;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .form-card label {
+            color: #334155;                  /* slate-700 */
+            font-weight: 500;
+        }
+
+        /* Поля ввода внутри карточек — заметная граница, чёткий focus */
+        .form-card input[type="text"],
+        .form-card input[type="email"],
+        .form-card input[type="number"],
+        .form-card input[type="date"],
+        .form-card input[type="search"],
+        .form-card input[type="url"],
+        .form-card input[type="tel"],
+        .form-card input[type="password"],
+        .form-card textarea,
+        .form-card select {
+            background-color: #ffffff;
+            border: 1px solid #94a3b8;       /* slate-400 — контрастнее */
+            border-radius: 0.5rem;
+            box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .form-card input[type="text"]:hover,
+        .form-card input[type="email"]:hover,
+        .form-card input[type="number"]:hover,
+        .form-card input[type="date"]:hover,
+        .form-card textarea:hover,
+        .form-card select:hover {
+            border-color: #64748b;           /* slate-500 */
+        }
+
+        .form-card input[type="text"]:focus,
+        .form-card input[type="email"]:focus,
+        .form-card input[type="number"]:focus,
+        .form-card input[type="date"]:focus,
+        .form-card input[type="search"]:focus,
+        .form-card input[type="url"]:focus,
+        .form-card input[type="tel"]:focus,
+        .form-card input[type="password"]:focus,
+        .form-card textarea:focus,
+        .form-card select:focus {
+            outline: none;
+            border-color: #3b82f6;           /* blue-500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+
+        /* Dark mode: усиливаем границу, чтобы карточка отделялась от фона страницы */
+        body.dark-mode .form-card {
+            background-color: var(--bg-secondary);
+            border-color: #334155;           /* slate-700 */
+            box-shadow:
+                0 1px 2px 0 rgba(0, 0, 0, 0.4),
+                0 4px 12px -2px rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode .form-card h2,
+        body.dark-mode .form-card label {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .form-card input[type="text"],
+        body.dark-mode .form-card input[type="email"],
+        body.dark-mode .form-card input[type="number"],
+        body.dark-mode .form-card input[type="date"],
+        body.dark-mode .form-card input[type="search"],
+        body.dark-mode .form-card input[type="url"],
+        body.dark-mode .form-card input[type="tel"],
+        body.dark-mode .form-card input[type="password"],
+        body.dark-mode .form-card textarea,
+        body.dark-mode .form-card select {
+            background-color: #1e293b;       /* slate-800 */
+            border-color: #475569;           /* slate-600 */
+            color: #f1f5f9;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .form-card input:focus,
+        body.dark-mode .form-card textarea:focus,
+        body.dark-mode .form-card select:focus {
+            border-color: #60a5fa;           /* blue-400 */
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+        }
+
+        /* ── Inline code ─────────────────────────────────────────────────── */
+        code {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 0.1rem 0.35rem;
+            border-radius: 0.3rem;
+            font-size: 0.8em;
+            color: #334155;
+        }
+
+        body.dark-mode code {
+            background-color: #1e293b;
+            border-color: #334155;
+            color: #cbd5e1;
+        }
+
+        /* ── Revoke form — визуально вторичная, деструктивная секция ──────── */
+        .revoke-card {
+            border-left: 4px solid #fbbf24;  /* amber-400 */
+        }
+
+        body.dark-mode .revoke-card {
+            border-left-color: #d97706;      /* amber-600 — более читаемый на тёмном фоне */
+        }
+
+        /* ── Trust note — мягкое предупреждение для критических действий ─── */
+        .trust-note {
+            font-size: 0.8125rem;
+            color: #92400e;
+            background-color: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        body.dark-mode .trust-note {
+            color: #fbbf24;
+            background-color: rgba(120, 53, 15, 0.25);
+            border-color: #78350f;
+        }
+
+        /* ── Alert blocks — скруглённые карточки вместо голых полос ────────── */
+        #connection-alert > div,
+        #network-alert > div {
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+        }
+
+        /* ── Transaction status — скругление + тень ────────────────────────── */
+        .transaction-status {
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+        }
+
+        /* ── Copy button ────────────────────────────────────────────────────── */
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.1rem;
+            border-radius: 0.25rem;
+            transition: color 0.15s ease, background-color 0.15s ease;
+        }
+        .copy-btn:hover {
+            background-color: rgba(0, 0, 0, 0.06);
+        }
+        body.dark-mode .copy-btn:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        /* ── Active nav tab in dark mode ────────────────────────────────────── */
+        body.dark-mode .nav-link.border-primary {
+            color: #93c5fd;           /* blue-300 — яркий для тёмного фона */
+            border-color: #60a5fa;    /* blue-400 */
+            background-color: rgba(30, 64, 175, 0.15);
+        }
+
+        /* ── Network-alert switch button in dark mode ───────────────────────── */
+        body.dark-mode #switch-network {
+            background-color: rgba(120, 53, 15, 0.55);
+            color: #fef3c7;
+            border-color: #d97706;
+        }
+        body.dark-mode #switch-network:hover {
+            background-color: rgba(120, 53, 15, 0.8);
+        }
     </style>
 </head>
 
-<body class="bg-white text-gray-900">
+<body class="text-gray-900">
     <div class="flex flex-col min-h-screen">
         <!-- Навигационная панель -->
         <nav class="bg-white shadow-sm flex-shrink-0">
@@ -448,15 +652,18 @@
                         </div>
                         <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
                             <a href="#/issue"
-                                class="nav-link border-primary text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                class="nav-link border-primary text-gray-900 inline-flex items-center gap-1.5 px-1 pt-1 border-b-2 text-sm font-medium">
+                                <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                 Для эмитента
                             </a>
                             <a href="#/verify"
-                                class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center gap-1.5 px-1 pt-1 border-b-2 text-sm font-medium">
+                                <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                 Для верификатора
                             </a>
                             <a href="#/admin"
-                                class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center gap-1.5 px-1 pt-1 border-b-2 text-sm font-medium">
+                                <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 Администрирование
                             </a>
                         </div>
@@ -471,7 +678,8 @@
                                     <div class="text-sm">
                                         <span id="wallet-address" class="font-mono">0x...</span>
                                     </div>
-                                    <button id="disconnect-wallet" class="text-gray-400 hover:text-gray-500">
+                                    <span id="role-badge" class="role-badge hidden"></span>
+                                    <button id="disconnect-wallet" title="Отключить кошелёк" class="text-gray-400 hover:text-gray-500">
                                         <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                             fill="currentColor">
                                             <path fill-rule="evenodd"
@@ -570,11 +778,12 @@
                     </div>
                     <div class="mt-3 space-y-1" id="mobile-wallet-section">
                         <div id="mobile-wallet-status" class="hidden px-4">
-                            <div class="flex items-center space-x-2">
+                            <div class="flex items-center space-x-2 flex-wrap gap-y-1">
                                 <div class="text-sm">
                                     <span id="mobile-wallet-address" class="font-mono">0x...</span>
                                 </div>
-                                <button id="mobile-disconnect-wallet" class="text-gray-400 hover:text-gray-500">
+                                <span id="role-badge-mobile" class="role-badge hidden"></span>
+                                <button id="mobile-disconnect-wallet" title="Отключить кошелёк" class="text-gray-400 hover:text-gray-500">
                                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                         fill="currentColor">
                                         <path fill-rule="evenodd"
@@ -633,7 +842,10 @@
                                 Пожалуйста, переключитесь на сеть Sepolia для использования приложения.
                             </p>
                             <button id="switch-network"
-                                class="mt-2 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                                class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 border border-yellow-400 text-xs font-semibold rounded-md text-yellow-800 bg-yellow-100 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 cursor-pointer">
+                                <svg class="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4M4 17h12M4 17l4 4M4 17l4-4"/>
+                                </svg>
                                 Переключиться на Sepolia
                             </button>
                         </div>
@@ -642,7 +854,7 @@
             </div>
 
             <!-- Статус транзакции -->
-            <div id="transaction-status" class="hidden mb-6">
+            <div id="transaction-status" class="hidden mb-6" aria-live="polite" aria-atomic="true">
                 <div class="transaction-status">
                     <div class="flex items-center">
                         <div class="mr-3">
@@ -663,17 +875,20 @@
             <!-- Представление для эмитента -->
             <section id="issuer-view" class="role-section active">
                 <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Регистрация документа</h1>
-                    <p class="text-gray-600 max-w-2xl mx-auto">Загрузите PDF-документ и введите метаданные для его
-                        регистрации в децентрализованном реестре.</p>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Выпуск Verifiable Credential</h1>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Загрузите PDF-документ студента, заполните данные VC и
+                        подпишите его через MetaMask. Данные хранятся в VC на устройстве студента — <strong>не в
+                            блокчейне</strong>.</p>
                 </div>
 
-                <div class="bg-white shadow rounded-lg p-6">
+                <!-- Выпуск VC -->
+                <div class="form-card bg-white shadow rounded-lg p-6 mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Выпуск VC</h2>
                     <form id="register-form" class="space-y-6">
                         <!-- Загрузка PDF -->
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-gray-700">
-                                Загрузите PDF-документ
+                                PDF-документ студента
                             </label>
                             <div class="mt-1">
                                 <input type="file" id="document-file" accept="application/pdf" class="block w-full text-sm text-gray-500
@@ -693,16 +908,40 @@
                                     <span id="pdf-filename" class="text-gray-700"></span>
                                 </div>
                                 <div class="mt-2 flex justify-between items-center">
-                                    <span class="text-sm text-gray-500">Хеш документа:</span>
+                                    <span class="text-sm text-gray-500">SHA-256 (fileHash):</span>
                                     <span id="document-hash" class="hash-display text-xs text-gray-700"></span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Метаданные -->
+                        <!-- Адрес держателя -->
+                        <div>
+                            <label for="holder-address" class="block text-sm font-medium text-gray-700">
+                                Адрес кошелька студента
+                                <span class="text-gray-400 font-normal ml-1" title="DID (Decentralized Identifier) — глобально уникальный идентификатор. В этой системе DID = адрес кошелька студента в формате did:pkh:eip155:11155111:0x...">— используется как DID on-chain</span>
+                            </label>
+                            <div class="mt-1">
+                                <input type="text" id="holder-address" name="holder-address"
+                                    class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary font-mono"
+                                    placeholder="0x...">
+                            </div>
+                            <div id="holder-address-error" class="hidden mt-1 text-sm text-red-600 flex items-center gap-1">
+                                <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                <span>Некорректный адрес Ethereum.</span>
+                            </div>
+                        </div>
+
+                        <!-- Данные VC (off-chain) -->
                         <div class="space-y-4">
-                            <h2 class="text-lg font-medium text-gray-900">Метаданные документа</h2>
-                            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                            <div class="flex items-center space-x-2">
+                                <h3 class="text-sm font-medium text-gray-700">Данные Verifiable Credential</h3>
+                                <span
+                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 cursor-help"
+                                    title="Личные данные студента хранятся только в файле VC на устройстве студента. В блокчейне записывается только хэш-идентификатор credential — без имени, степени или других личных данных.">
+                                    хранятся в VC, не в блокчейне
+                                </span>
+                            </div>
+                            <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-2">
                                 <div class="sm:col-span-1">
                                     <label for="student-name" class="block text-sm font-medium text-gray-700">
                                         Имя студента
@@ -737,6 +976,17 @@
                                 </div>
 
                                 <div class="sm:col-span-1">
+                                    <label for="degree" class="block text-sm font-medium text-gray-700">
+                                        Степень / квалификация
+                                    </label>
+                                    <div class="mt-1">
+                                        <input type="text" id="degree" name="degree"
+                                            class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                                            placeholder="Бакалавр">
+                                    </div>
+                                </div>
+
+                                <div class="sm:col-span-1">
                                     <label for="issue-date" class="block text-sm font-medium text-gray-700">
                                         Дата выдачи
                                     </label>
@@ -745,15 +995,62 @@
                                             class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary">
                                     </div>
                                 </div>
+
+                                <div class="sm:col-span-2">
+                                    <label for="valid-until" class="block text-sm font-medium text-gray-700">
+                                        Действителен до
+                                        <span class="text-gray-400 font-normal ml-1" title="Дата окончания срока действия VC. Если не указать, система автоматически установит +3 года от сегодняшней даты. После этой даты VC считается просроченным при верификации.">— необязательно, по умолчанию +3
+                                            года</span>
+                                    </label>
+                                    <div class="mt-1">
+                                        <input type="date" id="valid-until" name="valid-until"
+                                            class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Кнопка регистрации -->
+                        <!-- Кнопка -->
                         <div>
                             <button type="submit" id="register-button"
                                 class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled>
-                                Зарегистрировать документ
+                                Подписать и выпустить VC
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Результат выпуска -->
+                    <div id="issuance-result" class="hidden"></div>
+                </div>
+
+                <!-- Отзыв credential -->
+                <div class="form-card revoke-card bg-white shadow rounded-lg p-6">
+                    <div class="flex items-start gap-2 mb-1">
+                        <svg class="h-4 w-4 text-amber-500 flex-shrink-0 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                        </svg>
+                        <h2 class="text-lg font-semibold text-gray-900">Отозвать credential</h2>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4">Только эмитент, выпустивший credential, может его отозвать.
+                        Credential ID указан в скачанном VC JSON в поле <code class="font-mono text-xs">id</code>. Действие необратимо.</p>
+                    <form id="revoke-form" class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
+                        <div class="sm:col-span-4">
+                            <label for="revoke-credential-id" class="block text-sm font-medium text-gray-700"
+                                   title="Уникальный идентификатор credential в блокчейн-реестре. Находится в поле id скачанного файла VC JSON.">
+                                Credential ID
+                            </label>
+                            <div class="mt-1">
+                                <input type="text" id="revoke-credential-id" name="revoke-credential-id"
+                                    class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary font-mono"
+                                    placeholder="0x... (из поля id в файле VC JSON)">
+                            </div>
+                        </div>
+                        <div class="sm:col-span-2 flex items-end">
+                            <button type="submit" id="revoke-button"
+                                class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                Отозвать
                             </button>
                         </div>
                     </form>
@@ -763,17 +1060,51 @@
             <!-- Представление для верификатора -->
             <section id="verifier-view" class="role-section hidden">
                 <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Верификация документа</h1>
-                    <p class="text-gray-600 max-w-2xl mx-auto">Загрузите PDF-документ для проверки его подлинности в
-                        децентрализованном реестре.</p>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Верификация VC</h1>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Загрузите файл VC (JSON) и оригинальный PDF-документ.
+                        Система проверит подпись, статус отзыва, срок действия и соответствие хеша файла.</p>
                 </div>
 
-                <div class="bg-white shadow rounded-lg p-6">
+                <div class="form-card bg-white shadow rounded-lg p-6">
                     <form id="verify-form" class="space-y-6">
+                        <!-- Загрузка VC JSON -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Файл VC (JSON)
+                                <span class="text-gray-400 font-normal ml-1">— скачанный студентом
+                                    credential-*.json</span>
+                            </label>
+                            <div class="mt-1">
+                                <input type="file" id="vc-json-file" accept="application/json,.json" class="block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-md file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-green-50 file:text-green-700
+                                    hover:file:bg-green-100">
+                            </div>
+                            <div id="vc-json-preview" class="pdf-preview hidden">
+                                <div class="flex items-center">
+                                    <svg class="h-5 w-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span id="vc-json-filename" class="text-gray-700 text-sm"></span>
+                                </div>
+                                <div class="mt-1">
+                                    <span class="text-xs text-gray-500">Credential ID: </span>
+                                    <span id="vc-credential-id-preview"
+                                        class="hash-display text-xs text-gray-600"></span>
+                                </div>
+                            </div>
+                            <div id="vc-json-error" class="hidden text-sm text-red-600"></div>
+                        </div>
+
                         <!-- Загрузка PDF -->
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-gray-700">
-                                Загрузите PDF-документ для проверки
+                                Оригинальный PDF-документ
+                                <span class="text-gray-400 font-normal ml-1">— для проверки соответствия хеша</span>
                             </label>
                             <div class="mt-1">
                                 <input type="file" id="verify-file" accept="application/pdf" class="block w-full text-sm text-gray-500
@@ -793,7 +1124,7 @@
                                     <span id="verify-filename" class="text-gray-700"></span>
                                 </div>
                                 <div class="mt-2 flex justify-between items-center">
-                                    <span class="text-sm text-gray-500">Хеш документа:</span>
+                                    <span class="text-sm text-gray-500">SHA-256:</span>
                                     <span id="verify-document-hash" class="hash-display text-xs text-gray-500"></span>
                                 </div>
                             </div>
@@ -804,7 +1135,7 @@
                             <button type="submit" id="verify-button"
                                 class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled>
-                                Проверить документ
+                                Проверить VC
                             </button>
                         </div>
                     </form>
@@ -815,13 +1146,11 @@
                             <div class="text-center mb-6">
                                 <div id="verification-status"
                                     class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4">
-                                    <!-- Статус будет вставлен здесь -->
                                 </div>
                                 <h2 id="verification-title" class="text-2xl font-bold"></h2>
                             </div>
-
-                            <div id="verification-details" class="space-y-3">
-                                <!-- Детали документа будут вставлены здесь -->
+                            <div id="verification-details" class="space-y-4">
+                                <!-- Заполняется через showVerificationResult() -->
                             </div>
                         </div>
                     </div>
@@ -836,11 +1165,47 @@
                         регистрировать документы в системе.</p>
                 </div>
 
-                <div class="bg-white shadow rounded-lg p-6">
+                <!-- Emergency revoke: owner-only точечный отзыв любого credential -->
+                <div class="form-card bg-white shadow rounded-lg p-6 mb-6 border-l-4 border-orange-400">
+                    <div class="flex items-start gap-3 mb-4">
+                        <svg class="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                        </svg>
+                        <div>
+                            <h2 class="text-lg font-medium text-gray-900">Экстренный отзыв credential (owner)</h2>
+                            <p class="text-sm text-gray-500 mt-1">
+                                Используйте после компрометации ключа эмитента: отзывает конкретный credential,
+                                разблокируя держателя для переоформления у нового эмитента.
+                            </p>
+                        </div>
+                    </div>
+                    <form id="admin-emergency-revoke-form" class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
+                        <div class="sm:col-span-4">
+                            <label for="admin-revoke-credential-id" class="block text-sm font-medium text-gray-700">
+                                Credential ID
+                            </label>
+                            <div class="mt-1">
+                                <input type="text" id="admin-revoke-credential-id" name="admin-revoke-credential-id"
+                                    class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500 font-mono"
+                                    placeholder="0x...">
+                            </div>
+                        </div>
+                        <div class="sm:col-span-2 flex items-end">
+                            <button type="submit" id="admin-emergency-revoke-button"
+                                class="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                                Отозвать
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="form-card bg-white shadow rounded-lg p-6">
                     <div class="space-y-6">
                         <!-- Добавление эмитента -->
                         <div>
-                            <h2 class="text-lg font-medium text-gray-900 mb-4">Добавить нового эмитента</h2>
+                            <h2 class="text-lg font-medium text-gray-900 mb-3">Добавить нового эмитента</h2>
+                            <p class="trust-note">Эмитент получает право регистрировать документы от имени учреждения. Добавляйте только проверенные кошельки.</p>
                             <form id="add-issuer-form" class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                                 <div class="sm:col-span-4">
                                     <label for="new-issuer-address" class="block text-sm font-medium text-gray-700">
@@ -850,6 +1215,10 @@
                                         <input type="text" id="new-issuer-address" name="new-issuer-address"
                                             class="block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-primary focus:border-primary"
                                             placeholder="0x...">
+                                    </div>
+                                    <div id="new-issuer-address-error" class="hidden mt-1 text-sm text-red-600 flex items-center gap-1">
+                                        <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                        <span>Некорректный адрес Ethereum.</span>
                                     </div>
                                 </div>
                                 <div class="sm:col-span-2 flex items-end">
@@ -888,154 +1257,62 @@
     </div>
     <!-- Скрипты -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.15.0/ethers.umd.min.js"></script>
+
+    <!-- Phase 3: VC 2.0 layer — load order matters (utils first) -->
+    <script src="js/vc-utils.js"></script>
+    <script src="js/vc-issue.js"></script>
+    <script src="js/vc-verify.js"></script>
+    <script src="js/vc-storage.js"></script>
+
     <script>
-        // ABI контракта DocumentRegistry
+        // ABI контракта VCRegistry (Phase 2 migration)
         const contractABI = [
             {
-                "inputs": [
-                    {
-                        "internalType": "address[]",
-                        "name": "_initialIssuers",
-                        "type": "address[]"
-                    }
-                ],
+                "inputs": [{ "internalType": "address[]", "name": "_initialIssuers", "type": "address[]" }],
                 "stateMutability": "nonpayable",
                 "type": "constructor"
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": true,
-                        "internalType": "bytes32",
-                        "name": "docHash",
-                        "type": "bytes32"
-                    },
-                    {
-                        "indexed": true,
-                        "internalType": "address",
-                        "name": "issuer",
-                        "type": "address"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "string",
-                        "name": "metadata",
-                        "type": "string"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "uint256",
-                        "name": "timestamp",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "DocumentRegistered",
-                "type": "event"
-            },
-            {
-                "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": true,
-                        "internalType": "bytes32",
-                        "name": "docHash",
-                        "type": "bytes32"
-                    },
-                    {
-                        "indexed": true,
-                        "internalType": "address",
-                        "name": "issuer",
-                        "type": "address"
-                    },
-                    {
-                        "indexed": false,
-                        "internalType": "uint256",
-                        "name": "timestamp",
-                        "type": "uint256"
-                    }
-                ],
-                "name": "DocumentRevoked",
-                "type": "event"
-            },
-            {
-                "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": true,
-                        "internalType": "address",
-                        "name": "issuer",
-                        "type": "address"
-                    }
-                ],
+                "inputs": [{ "indexed": true, "internalType": "address", "name": "issuer", "type": "address" }],
                 "name": "IssuerAdded",
                 "type": "event"
             },
             {
                 "anonymous": false,
-                "inputs": [
-                    {
-                        "indexed": true,
-                        "internalType": "address",
-                        "name": "issuer",
-                        "type": "address"
-                    }
-                ],
+                "inputs": [{ "indexed": true, "internalType": "address", "name": "issuer", "type": "address" }],
                 "name": "IssuerRemoved",
                 "type": "event"
             },
             {
+                "anonymous": false,
                 "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "_issuer",
-                        "type": "address"
-                    }
+                    { "indexed": true, "internalType": "bytes32", "name": "credentialId", "type": "bytes32" },
+                    { "indexed": true, "internalType": "address", "name": "issuer", "type": "address" },
+                    { "indexed": true, "internalType": "address", "name": "holder", "type": "address" }
                 ],
+                "name": "CredentialRegistered",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    { "indexed": true, "internalType": "bytes32", "name": "credentialId", "type": "bytes32" },
+                    { "indexed": true, "internalType": "address", "name": "revokedBy", "type": "address" },
+                    { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+                ],
+                "name": "CredentialRevoked",
+                "type": "event"
+            },
+            {
+                "inputs": [{ "internalType": "address", "name": "_issuer", "type": "address" }],
                 "name": "addIssuer",
                 "outputs": [],
                 "stateMutability": "nonpayable",
                 "type": "function"
             },
             {
-                "inputs": [
-                    {
-                        "internalType": "bytes32",
-                        "name": "_docHash",
-                        "type": "bytes32"
-                    }
-                ],
-                "name": "revokeDocument",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "bytes32",
-                        "name": "_docHash",
-                        "type": "bytes32"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "_metadata",
-                        "type": "string"
-                    }
-                ],
-                "name": "registerDocument",
-                "outputs": [],
-                "stateMutability": "nonpayable",
-                "type": "function"
-            },
-            {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "_issuer",
-                        "type": "address"
-                    }
-                ],
+                "inputs": [{ "internalType": "address", "name": "_issuer", "type": "address" }],
                 "name": "removeIssuer",
                 "outputs": [],
                 "stateMutability": "nonpayable",
@@ -1043,78 +1320,68 @@
             },
             {
                 "inputs": [
-                    {
-                        "internalType": "bytes32",
-                        "name": "_docHash",
-                        "type": "bytes32"
-                    }
+                    { "internalType": "bytes32", "name": "credentialId", "type": "bytes32" },
+                    { "internalType": "address", "name": "holder", "type": "address" }
                 ],
-                "name": "verifyDocument",
-                "outputs": [
-                    {
-                        "internalType": "bool",
-                        "name": "exists",
-                        "type": "bool"
-                    },
-                    {
-                        "internalType": "address",
-                        "name": "issuer",
-                        "type": "address"
-                    },
-                    {
-                        "internalType": "string",
-                        "name": "metadata",
-                        "type": "string"
-                    },
-                    {
-                        "internalType": "uint256",
-                        "name": "timestamp",
-                        "type": "uint256"
-                    },
-                    {
-                        "internalType": "bool",
-                        "name": "isActive",
-                        "type": "bool"
-                    }
-                ],
+                "name": "registerCredential",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [{ "internalType": "bytes32", "name": "credentialId", "type": "bytes32" }],
+                "name": "revokeCredential",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [{ "internalType": "bytes32", "name": "credentialId", "type": "bytes32" }],
+                "name": "checkRevocation",
+                "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
                 "stateMutability": "view",
                 "type": "function"
             },
             {
-                "inputs": [
-                    {
-                        "internalType": "address",
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
                 "name": "isIssuer",
-                "outputs": [
-                    {
-                        "internalType": "bool",
-                        "name": "",
-                        "type": "bool"
-                    }
-                ],
+                "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
                 "stateMutability": "view",
                 "type": "function"
             },
             {
                 "inputs": [],
                 "name": "owner",
-                "outputs": [
-                    {
-                        "internalType": "address",
-                        "name": "",
-                        "type": "address"
-                    }
-                ],
+                "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+                "name": "credentialIssuer",
+                "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+                "name": "isRevoked",
+                "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+                "name": "holderCredential",
+                "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
                 "stateMutability": "view",
                 "type": "function"
             }
         ];
 
-        const contractAddress = "0x9BF25ae134d4eC0C1B8A11Dfe510B83fB82B1D07"; // Адрес контракта на Sepolia
+        // Адрес задеплоенного VCRegistry на Sepolia.
+        // При повторном деплое (npx hardhat run scripts/deploy.js) обновите значение.
+        const contractAddress = "0xb6e604b7e78544656Ef36DE86b05611b75231595";
 
         // Список альтернативных RPC endpoints для Sepolia
         const SEPOLIA_RPC_URLS = [
@@ -1134,20 +1401,55 @@
         let userRole;
         let isConnected = false;
         let isSepolia = false;
-        let documentHash = null;
-        let verifyDocumentHash = null;
-        let currentRpcUrl = null; // Текущий рабочий RPC URL
+        let documentHash = null;        // bytes32 hex SHA-256 PDF (issue side)
+        let verifyDocumentHash = null;  // bytes32 hex SHA-256 PDF (verify side)
+        let currentVCForVerification = null; // parsed VC object loaded from JSON file
+        let _lastIssuedVC = null;       // VC последнего выпуска (только в памяти сессии, для повторного скачивания)
+        let currentRpcUrl = null;       // текущий рабочий RPC URL
+        let _txEtherscanUrl = '';       // Sepolia Etherscan URL текущей транзакции
+        let _ethListenersRegistered = false; // guard: регистрируем слушателей MetaMask только один раз
+
+        // Скопировать текст в буфер; кнопка показывает галочку на 1.5 с
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(function () {
+                const prev = btn.innerHTML;
+                btn.innerHTML = '<svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
+                setTimeout(function () { btn.innerHTML = prev; }, 1500);
+            }).catch(function () {});
+        }
+
+        // Вернуть HTML с укороченным хэшем + кнопкой копирования
+        function renderHashBadge(full) {
+            if (!full) return '';
+            const short = (full.length > 20)
+                ? full.slice(0, 10) + '...' + full.slice(-6)
+                : full;
+            const escaped = full.replace(/'/g, "\\'");
+            return '<span class="inline-flex items-center gap-1">'
+                + '<span class="hash-display" title="' + full + '">' + short + '</span>'
+                + '<button type="button" class="copy-btn text-gray-400 hover:text-gray-600"'
+                + ' onclick="copyToClipboard(\'' + escaped + '\', this)" title="Копировать полное значение">'
+                + '<svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">'
+                + '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"'
+                + ' d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>'
+                + '</svg></button></span>';
+        }
+
+        // Предупреждение если контракт не сконфигурирован
+        if (!contractAddress) {
+            console.warn('[VCRegistry] contractAddress не задан. Задеплойте VCRegistry и вставьте адрес в index.html.');
+        }
 
         // Функция для показа стилизованных уведомлений
         function showNotification(message, type = 'info', duration = 5000) {
             const container = document.getElementById('notification-container');
-            
+
             // Защита от null контейнера
             if (!container) {
                 console.warn('notification-container не найден, используем console вместо:', message);
                 return;
             }
-            
+
             const notification = document.createElement('div');
 
             let bgColor, textColor, borderColor, icon;
@@ -1218,9 +1520,19 @@
                 updateActiveView();
             });
 
-            // Устанавливаем текущую дату по умолчанию
+            // Устанавливаем текущую дату выдачи по умолчанию (поле идёт в VC, не в блокчейн)
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('issue-date').value = today;
+            const issueDateEl = document.getElementById('issue-date');
+            if (issueDateEl) issueDateEl.value = today;
+
+            // Предупреждение если contractAddress не задан
+            if (!contractAddress) {
+                showNotification(
+                    'VCRegistry не сконфигурирован: обновите contractAddress в index.html после деплоя.',
+                    'warning',
+                    0  // постоянное уведомление
+                );
+            }
 
             // Пытаемся восстановить подключение при загрузке страницы
             attemptAutoReconnect();
@@ -1240,12 +1552,12 @@
 
                 if (accounts && accounts.length > 0) {
                     console.log('Найдены подключенные аккаунты, восстанавливаю подключение...');
-                    // Автоматически переподключаемся
                     userAddress = accounts[0];
                     isConnected = true;
 
-                    // Инициализируем provider
+                    // Инициализируем provider и регистрируем слушатели MetaMask
                     provider = new ethers.BrowserProvider(window.ethereum);
+                    setupEthereumListeners(); // <-- критично: без этого chainChanged не отслеживается
                     signer = await provider.getSigner();
                     contract = new ethers.Contract(contractAddress, contractABI, signer);
 
@@ -1350,6 +1662,49 @@
         }
 
         // Переключение на сеть Sepolia
+        // Регистрирует слушатели chainChanged/accountsChanged ровно один раз.
+        // Вызывается из connectWallet и attemptAutoReconnect.
+        function setupEthereumListeners() {
+            if (_ethListenersRegistered || typeof window.ethereum === 'undefined') return;
+            _ethListenersRegistered = true;
+
+            window.ethereum.on('chainChanged', async () => {
+                console.log('chainChanged: обновляю состояние без reload');
+                // Ethers v6 кэширует сеть внутри BrowserProvider — пересоздаём его,
+                // иначе provider.getNetwork() будет возвращать старое значение.
+                try {
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    if (isConnected && userAddress) {
+                        signer = await provider.getSigner();
+                        contract = new ethers.Contract(contractAddress, contractABI, signer);
+                    }
+                    await checkNetwork();
+                    if (isConnected) await checkUserRole();
+                } catch (e) {
+                    console.warn('Ошибка обновления после смены сети:', e);
+                }
+            });
+
+            window.ethereum.on('accountsChanged', async (accounts) => {
+                console.log('accountsChanged:', accounts);
+                if (!accounts || accounts.length === 0) {
+                    handleWalletDisconnect();
+                    return;
+                }
+                userAddress = accounts[0];
+                try {
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    signer = await provider.getSigner();
+                    contract = new ethers.Contract(contractAddress, contractABI, signer);
+                    updateWalletUI();
+                    await checkNetwork();
+                    await checkUserRole();
+                } catch (e) {
+                    console.warn('Ошибка обновления после смены аккаунта:', e);
+                }
+            });
+        }
+
         async function switchToSepolia() {
             const sepoliaChainId = '0xaa36a7'; // Hex for 0x7a69
 
@@ -1358,6 +1713,19 @@
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: sepoliaChainId }],
                 });
+                // Defensive: chainChanged может прийти с задержкой в некоторых браузерах.
+                // Обновляем UI сразу после успешного переключения.
+                try {
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    if (isConnected && userAddress) {
+                        signer = await provider.getSigner();
+                        contract = new ethers.Contract(contractAddress, contractABI, signer);
+                    }
+                    await checkNetwork();
+                    if (isConnected) await checkUserRole();
+                } catch (e) {
+                    console.warn('Ошибка немедленного обновления после switch:', e);
+                }
             } catch (switchError) {
                 // This error code indicates that the chain has not been added to MetaMask
                 if (switchError.code === 4902) {
@@ -1404,27 +1772,9 @@
                 if (!provider) {
                     console.log('Инициализирую provider...');
                     provider = new ethers.BrowserProvider(window.ethereum);
-
-                    // Установка обработчиков событий
-                    window.ethereum.removeAllListeners('chainChanged');
-                    window.ethereum.removeAllListeners('accountsChanged');
-
-                    window.ethereum.on('chainChanged', (chainId) => {
-                        console.log('Сеть изменена, перезагружаю...');
-                        checkNetwork();
-                        window.location.reload();
-                    });
-
-                    window.ethereum.on('accountsChanged', (accounts) => {
-                        console.log('Аккаунты изменены:', accounts);
-                        if (accounts.length === 0) {
-                            handleWalletDisconnect();
-                        } else {
-                            userAddress = accounts[0];
-                            checkUserRole();
-                        }
-                    });
                 }
+                // Регистрируем слушатели chainChanged/accountsChanged (один раз, через guard)
+                setupEthereumListeners();
 
                 // Запрашиваем доступ к аккаунтам
                 console.log('Запрашиваю доступ к аккаунтам...');
@@ -1496,7 +1846,7 @@
             }
 
             // Пробуем каждый RPC endpoint в списке
-            console.log('🔍 Ищу рабочий RPC endpoint из', SEPOLIA_RPC_URLS.length, 'вариантов...');
+            console.log('Ищу рабочий RPC endpoint из', SEPOLIA_RPC_URLS.length, 'вариантов...');
             for (const rpcUrl of SEPOLIA_RPC_URLS) {
                 try {
                     console.log('  Проверяю:', rpcUrl);
@@ -1606,7 +1956,7 @@
                 } else if (error.message && (error.message.includes('endpoint') || error.message.includes('RPC'))) {
                     connectionAlert.classList.remove('hidden');
                     connectionMessage.innerHTML =
-                        '<strong>⚠️ Ошибка подключения к RPC:</strong> ' +
+                        '<strong>Ошибка подключения к RPC:</strong> ' +
                         'Не удалось подключиться ни к одному RPC endpoint. ' +
                         '<br>Проверьте интернет-соединение и попробуйте обновить страницу (Ctrl+R).' +
                         '<br><small>' + error.message + '</small>';
@@ -1647,8 +1997,22 @@
         // Обновление UI в зависимости от роли
         function updateRoleUI() {
             console.log('Обновляю UI для роли:', userRole);
-            // Роль определяет доступные вкладки, но не показывает их все сразу
-            // Показ вкладок осуществляется через updateActiveView при навигации
+
+            // Обновляем role badge в navbar
+            const roleLabels = { owner: 'Владелец', issuer: 'Эмитент', verifier: 'Верификатор' };
+            const roleClasses = { owner: 'owner-badge', issuer: 'issuer-badge', verifier: 'verifier-badge' };
+            ['role-badge', 'role-badge-mobile'].forEach(function (id) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (userRole && roleLabels[userRole]) {
+                    el.textContent = roleLabels[userRole];
+                    el.className = 'role-badge ' + roleClasses[userRole];
+                } else {
+                    el.className = 'role-badge hidden';
+                    el.textContent = '';
+                }
+            });
+
             if (userRole === 'owner') {
                 loadIssuersList();
             }
@@ -1665,9 +2029,13 @@
             signer = null;
             contract = null;
 
-            // Скрываем статус кошелька
+            // Скрываем статус кошелька и очищаем role badge
             document.getElementById('wallet-status').classList.add('hidden');
             document.getElementById('mobile-wallet-status').classList.add('hidden');
+            ['role-badge', 'role-badge-mobile'].forEach(function (id) {
+                const el = document.getElementById(id);
+                if (el) { el.className = 'role-badge hidden'; el.textContent = ''; }
+            });
 
             // Показываем кнопку подключения
             document.getElementById('connect-wallet').classList.remove('hidden');
@@ -1691,19 +2059,41 @@
 
         // Сброс форм
         function resetForms() {
-            // Сброс формы регистрации
-            document.getElementById('document-file').value = '';
-            document.getElementById('pdf-preview').classList.add('hidden');
-            document.getElementById('register-button').disabled = true;
+            // Issue form
+            const docFile = document.getElementById('document-file');
+            if (docFile) docFile.value = '';
+            const pdfPrev = document.getElementById('pdf-preview');
+            if (pdfPrev) pdfPrev.classList.add('hidden');
+            const holderEl = document.getElementById('holder-address');
+            if (holderEl) holderEl.value = '';
+            const issResult = document.getElementById('issuance-result');
+            if (issResult) issResult.classList.add('hidden');
+            documentHash = null;
+            updateIssueButtonState();
 
-            // Сброс формы проверки
-            document.getElementById('verify-file').value = '';
-            document.getElementById('verify-pdf-preview').classList.add('hidden');
-            document.getElementById('verify-button').disabled = true;
-            document.getElementById('verification-result').classList.add('hidden');
+            // Verify form
+            const vcJsonFile = document.getElementById('vc-json-file');
+            if (vcJsonFile) vcJsonFile.value = '';
+            const vcPrev = document.getElementById('vc-json-preview');
+            if (vcPrev) vcPrev.classList.add('hidden');
+            const vcErr = document.getElementById('vc-json-error');
+            if (vcErr) vcErr.classList.add('hidden');
+            const verifyF = document.getElementById('verify-file');
+            if (verifyF) verifyF.value = '';
+            const verifyPrev = document.getElementById('verify-pdf-preview');
+            if (verifyPrev) verifyPrev.classList.add('hidden');
+            const verifyRes = document.getElementById('verification-result');
+            if (verifyRes) verifyRes.classList.add('hidden');
+            currentVCForVerification = null;
+            verifyDocumentHash = null;
+            updateVerifyButtonState();
+            setEtherscanLink(null); // очищаем ссылку на прошлую транзакцию
 
-            // Сброс формы добавления эмитента
-            document.getElementById('new-issuer-address').value = '';
+            // Admin form
+            const newIssuer = document.getElementById('new-issuer-address');
+            if (newIssuer) newIssuer.value = '';
+            const revokeId = document.getElementById('revoke-credential-id');
+            if (revokeId) revokeId.value = '';
         }
 
         // Функции работы с темой
@@ -1795,16 +2185,82 @@
                 handleFileUpload(e, false);
             });
 
-            // Регистрация документа
+            // Выпуск VC
             document.getElementById('register-form').addEventListener('submit', function (e) {
                 e.preventDefault();
-                registerDocument();
+                issueCredential();
             });
 
-            // Проверка документа
+            // holder-address input → обновляем состояние кнопки + inline-валидация
+            const holderAddrEl = document.getElementById('holder-address');
+            if (holderAddrEl) {
+                holderAddrEl.addEventListener('input', updateIssueButtonState);
+                holderAddrEl.addEventListener('blur', function () {
+                    const val = this.value.trim();
+                    const errEl = document.getElementById('holder-address-error');
+                    if (errEl) {
+                        if (val && !ethers.isAddress(val)) {
+                            errEl.classList.remove('hidden');
+                        } else {
+                            errEl.classList.add('hidden');
+                        }
+                    }
+                });
+            }
+
+            // new-issuer-address → inline-валидация
+            const newIssuerAddrEl = document.getElementById('new-issuer-address');
+            if (newIssuerAddrEl) {
+                newIssuerAddrEl.addEventListener('blur', function () {
+                    const val = this.value.trim();
+                    const errEl = document.getElementById('new-issuer-address-error');
+                    if (errEl) {
+                        if (val && !ethers.isAddress(val)) {
+                            errEl.classList.remove('hidden');
+                        } else {
+                            errEl.classList.add('hidden');
+                        }
+                    }
+                });
+            }
+
+            // Загрузка VC JSON файла
+            const vcJsonInput = document.getElementById('vc-json-file');
+            if (vcJsonInput) {
+                vcJsonInput.addEventListener('change', async function (e) {
+                    const file = e.target.files[0];
+                    const previewEl = document.getElementById('vc-json-preview');
+                    const filenameEl = document.getElementById('vc-json-filename');
+                    const credIdEl = document.getElementById('vc-credential-id-preview');
+                    const errEl = document.getElementById('vc-json-error');
+
+                    currentVCForVerification = null;
+                    if (previewEl) previewEl.classList.add('hidden');
+                    if (errEl) { errEl.classList.add('hidden'); errEl.textContent = ''; }
+
+                    if (!file) { updateVerifyButtonState(); return; }
+
+                    try {
+                        const vc = await VCStorage.parseVCFile(file);
+                        currentVCForVerification = vc;
+
+                        if (filenameEl) filenameEl.textContent = file.name;
+                        if (credIdEl) credIdEl.textContent = (vc.id || '').slice(0, 42) + '...';
+                        if (previewEl) previewEl.classList.remove('hidden');
+                    } catch (err) {
+                        if (errEl) {
+                            errEl.textContent = err.message;
+                            errEl.classList.remove('hidden');
+                        }
+                    }
+                    updateVerifyButtonState();
+                });
+            }
+
+            // Проверка VC
             document.getElementById('verify-form').addEventListener('submit', function (e) {
                 e.preventDefault();
-                verifyDocument();
+                verifyDocumentVC();
             });
 
             // Добавление эмитента
@@ -1812,6 +2268,24 @@
                 e.preventDefault();
                 addIssuer();
             });
+
+            // Отзыв credential
+            const revokeForm = document.getElementById('revoke-form');
+            if (revokeForm) {
+                revokeForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    revokeCredential();
+                });
+            }
+
+            // Admin emergency revoke form (owner-only)
+            const adminRevokeForm = document.getElementById('admin-emergency-revoke-form');
+            if (adminRevokeForm) {
+                adminRevokeForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    ownerRevokeCredential();
+                });
+            }
 
             // Переключатель темы
             const themeToggle = document.getElementById('theme-toggle');
@@ -1835,7 +2309,7 @@
             initTheme();
         }
 
-        // Обработка загрузки файла
+        // Обработка загрузки PDF файла
         async function handleFileUpload(event, isRegister) {
             const file = event.target.files[0];
             if (!file || file.type !== 'application/pdf') {
@@ -1843,35 +2317,37 @@
                 return;
             }
 
-            // Отображаем имя файла
-            const filenameElement = isRegister ?
-                document.getElementById('pdf-filename') :
-                document.getElementById('verify-filename');
-            const previewElement = isRegister ?
-                document.getElementById('pdf-preview') :
-                document.getElementById('verify-pdf-preview');
-            const hashElement = isRegister ?
-                document.getElementById('document-hash') :
-                document.getElementById('verify-document-hash');
+            const filenameElement = isRegister
+                ? document.getElementById('pdf-filename')
+                : document.getElementById('verify-filename');
+            const previewElement = isRegister
+                ? document.getElementById('pdf-preview')
+                : document.getElementById('verify-pdf-preview');
+            const hashElement = isRegister
+                ? document.getElementById('document-hash')
+                : document.getElementById('verify-document-hash');
 
             filenameElement.textContent = file.name;
             previewElement.classList.remove('hidden');
 
-            // Вычисляем хеш файла
             try {
-                const hash = await calculateFileHash(file);
-                hashElement.textContent = hash;
+                // Используем VCUtils.computeFileHash если доступен, иначе встроенный
+                const hash = (typeof VCUtils !== 'undefined')
+                    ? await VCUtils.computeFileHash(file)
+                    : await calculateFileHash(file);
+
+                hashElement.innerHTML = renderHashBadge(hash);
 
                 if (isRegister) {
                     documentHash = hash;
-                    document.getElementById('register-button').disabled = false;
+                    updateIssueButtonState();   // кнопка включается только при наличии и файла, и holder-адреса
                 } else {
                     verifyDocumentHash = hash;
-                    document.getElementById('verify-button').disabled = false;
+                    updateVerifyButtonState();  // кнопка включается только при наличии и VC JSON, и PDF
                 }
             } catch (error) {
                 console.error('Ошибка вычисления хеша:', error);
-                showNotification('Ошибка при обработке файла. Пожалуйста, попробуйте снова.', 'error');
+                showNotification('Ошибка при обработке файла.', 'error');
             }
         }
 
@@ -1896,244 +2372,443 @@
             });
         }
 
-        // Регистрация документа
-        async function registerDocument() {
+        // Вспомогательная функция: включает/выключает кнопку выпуска VC
+        function updateIssueButtonState() {
+            const holderAddrEl = document.getElementById('holder-address');
+            const holderAddr = holderAddrEl ? holderAddrEl.value.trim() : '';
+            const hasHolder = ethers.isAddress(holderAddr);
+            const hasFile = !!documentHash;
+            const btn = document.getElementById('register-button');
+            if (btn) btn.disabled = !(hasFile && hasHolder);
+        }
+
+        // Вспомогательная функция: включает/выключает кнопку верификации
+        function updateVerifyButtonState() {
+            const hasVC = !!currentVCForVerification;
+            const hasPDF = !!verifyDocumentHash;
+            const btn = document.getElementById('verify-button');
+            if (btn) btn.disabled = !(hasVC && hasPDF);
+        }
+
+        // Отображение результата успешного выпуска VC
+        function showIssuanceResult(vc, credentialId) {
+            const resultDiv = document.getElementById('issuance-result');
+            if (!resultDiv) return;
+
+            _lastIssuedVC = vc; // сохраняем в памяти сессии для повторного скачивания
+
+            const holderDID = vc.credentialSubject?.id || '';
+            const validUntil = vc.validUntil
+                ? new Date(vc.validUntil).toLocaleDateString('ru-RU')
+                : 'не ограничен';
+
+            resultDiv.innerHTML = `
+                <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div class="flex items-start">
+                        <svg class="h-5 w-5 text-green-500 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-green-800 mb-2">VC выпущен и зарегистрирован в блокчейне</p>
+                            <div class="space-y-1 text-sm text-green-700">
+                                <p><span class="font-medium">Держатель:</span> ${renderHashBadge(holderDID)}</p>
+                                <p><span class="font-medium">Действителен до:</span> ${validUntil}</p>
+                                <p class="font-medium mt-2" title="Уникальный идентификатор credential в реестре. Используется для отзыва.">Credential ID (для отзыва):</p>
+                                <div class="flex items-center gap-2 bg-green-100 p-2 rounded">${renderHashBadge(credentialId)}</div>
+                                <p class="mt-2 text-xs text-green-600">Файл VC скачан автоматически. Передайте его студенту.</p>
+                                <button id="redownload-vc-btn" type="button" class="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-green-700 hover:text-green-900 underline underline-offset-2">
+                                    <svg class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                    </svg>
+                                    Скачать VC ещё раз
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            resultDiv.classList.remove('hidden');
+
+            const redownloadBtn = document.getElementById('redownload-vc-btn');
+            if (redownloadBtn) {
+                redownloadBtn.addEventListener('click', function () {
+                    if (_lastIssuedVC) VCStorage.downloadVC(_lastIssuedVC);
+                });
+            }
+        }
+
+        // Выпуск VC: подпись через MetaMask + регистрация credentialId on-chain
+        async function issueCredential() {
+            const holderAddress = (document.getElementById('holder-address')?.value || '').trim();
+
             if (!documentHash) {
-                showNotification('Пожалуйста, загрузите PDF-файл.', 'warning');
+                showNotification('Загрузите PDF-документ.', 'warning');
+                return;
+            }
+            if (!ethers.isAddress(holderAddress)) {
+                showNotification('Введите корректный адрес кошелька студента.', 'warning');
+                return;
+            }
+            if (!isConnected || !contract) {
+                showNotification('Подключите MetaMask.', 'warning');
                 return;
             }
 
-            const studentName = document.getElementById('student-name').value;
-            const documentNumber = document.getElementById('document-number').value;
-            const institution = document.getElementById('institution').value;
-            const issueDate = document.getElementById('issue-date').value;
+            const credentialSubject = {
+                studentName: document.getElementById('student-name')?.value || '',
+                documentNumber: document.getElementById('document-number')?.value || '',
+                institution: document.getElementById('institution')?.value || '',
+                issueDate: document.getElementById('issue-date')?.value || '',
+                degree: document.getElementById('degree')?.value || '',
+            };
 
-            if (!studentName || !documentNumber || !institution || !issueDate) {
-                showNotification('Пожалуйста, заполните все поля метаданных.', 'warning');
-                return;
-            }
+            const validUntilRaw = document.getElementById('valid-until')?.value;
+            const validUntil = validUntilRaw
+                ? new Date(validUntilRaw + 'T00:00:00Z').toISOString()
+                : undefined;
 
-            // Формируем метаданные
-            const metadata = JSON.stringify({
-                studentName,
-                documentNumber,
-                institution,
-                issueDate
-            });
-
-            // Показываем статус транзакции
-            showTransactionStatus('Отправка транзакции регистрации документа...');
-
+            setEtherscanLink(null); // сбросить ссылку прошлой операции
             try {
-                // Отправляем транзакцию
-                const tx = await contract.registerDocument(documentHash, metadata);
+                // Шаг 1: подпись VC в MetaMask
+                showTransactionStatus('Шаг 1/3 — Подписываю VC через MetaMask...');
+                const { vc, credentialId } = await VCIssue.issueVC({
+                    issuerAddress: userAddress,
+                    holderAddress,
+                    fileHashHex: documentHash,
+                    credentialSubject,
+                    validUntil,
+                });
 
-                // Показываем хеш транзакции и ссылку на Etherscan
-                const etherscanLink = `https://sepolia.etherscan.io/tx/${tx.hash}`;
-                document.getElementById('etherscan-link').href = etherscanLink;
-                document.getElementById('etherscan-link').classList.remove('hidden');
+                // Шаг 2: регистрация on-chain
+                showTransactionStatus('Шаг 2/3 — Регистрирую в блокчейне...');
+                const tx = await contract.registerCredential(credentialId, holderAddress);
 
-                // Ожидаем подтверждения
-                showTransactionStatus('Ожидание подтверждения транзакции...');
-                const receipt = await tx.wait();
+                setEtherscanLink(tx.hash);
+                showTransactionStatus('Шаг 2/3 — Ожидание подтверждения транзакции...');
+                await tx.wait();
 
-                // Успех
-                showTransactionStatus('Документ успешно зарегистрирован в блокчейне!', 'success');
-                document.getElementById('etherscan-link').href = etherscanLink;
-                document.getElementById('etherscan-link').classList.remove('hidden');
+                // Шаг 3: скачать VC файл
+                showTransactionStatus('Шаг 3/3 — Скачиваю файл VC...');
+                VCStorage.downloadVC(vc);
 
-                // Сбрасываем форму
-                resetForms();
-
-            } catch (error) {
-                console.error('Ошибка регистрации документа:', error);
-                let errorMessage = 'Не удалось зарегистрировать документ.';
-
-                if (error.message.includes('user rejected transaction')) {
-                    errorMessage = 'Вы отменили транзакцию.';
-                } else if (error.message.includes('insufficient funds')) {
-                    errorMessage = 'Недостаточно средств для оплаты газа.';
+                // Шаг 4: кэш IndexedDB (не критично при ошибке)
+                try { await VCStorage.saveToIndexedDB(vc); } catch (e) {
+                    console.warn('IndexedDB cache failed (non-critical):', e.message);
                 }
 
+                showTransactionStatus('Шаг 3/3 — VC выпущен и зарегистрирован!', 'success');
+                showIssuanceResult(vc, credentialId);
+
+                // Сбрасываем форму (кроме результата)
+                document.getElementById('document-file').value = '';
+                document.getElementById('pdf-preview').classList.add('hidden');
+                document.getElementById('holder-address').value = '';
+                documentHash = null;
+                updateIssueButtonState();
+
+            } catch (error) {
+                console.error('Ошибка выпуска VC:', error);
+                let errorMessage = 'Не удалось выпустить VC.';
+                if (error.message?.includes('user rejected') || error.code === 4001) {
+                    errorMessage = 'Вы отменили подпись в MetaMask.';
+                } else if (error.message?.includes('insufficient funds')) {
+                    errorMessage = 'Недостаточно ETH для оплаты газа.';
+                } else if (error.message?.includes('Credential already registered')) {
+                    errorMessage = 'Этот credential уже зарегистрирован в блокчейне. Скорее всего, VC для этого студента с этим документом уже был выпущен ранее.';
+                } else if (error.message?.includes('Holder already has active')) {
+                    errorMessage = 'У этого студента уже есть активный credential. Сначала отзовите предыдущий.';
+                } else if (
+                    error.message?.includes('too many') ||
+                    error.message?.includes('rate limit') ||
+                    error.message?.includes('-32002') ||
+                    error.code === -32002
+                ) {
+                    errorMessage = 'RPC-провайдер вернул ошибку превышения лимита запросов. Подождите несколько секунд и попробуйте снова.';
+                } else if (error.message?.includes('coalesce')) {
+                    errorMessage = 'Сетевая ошибка при обращении к блокчейну. Проверьте соединение и попробуйте снова.';
+                } else if (error.message) {
+                    errorMessage = error.message.slice(0, 120);
+                }
                 showTransactionStatus(errorMessage, 'error');
             }
         }
 
-        // Проверка документа
-        async function verifyDocument() {
+        // Иконки чеков для результата верификации
+        function checkIcon(ok) {
+            return ok
+                ? '<svg class="h-5 w-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>'
+                : '<svg class="h-5 w-5 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+        }
+
+        // Отображение результатов верификации VC
+        function showVerificationResult(vc, result) {
+            const resultSection = document.getElementById('verification-result');
+            const statusElement = document.getElementById('verification-status');
+            const titleElement = document.getElementById('verification-title');
+            const detailsElement = document.getElementById('verification-details');
+            const allOk = result.valid;
+
+            statusElement.className = allOk
+                ? 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-active'
+                : 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-revoked';
+            statusElement.textContent = allOk ? 'Действителен' : 'Не действителен';
+
+            titleElement.textContent = allOk ? 'VC подлинный' : 'VC не прошёл проверку';
+            titleElement.className = `text-2xl font-bold ${allOk ? 'text-green-600' : 'text-red-600'}`;
+
+            const cs = vc.credentialSubject || {};
+            const issuerDID = vc.issuer?.id || vc.issuer || '—';
+            const holderDID = cs.id || '—';
+            const validUntil = vc.validUntil
+                ? new Date(vc.validUntil).toLocaleDateString('ru-RU')
+                : 'не ограничен';
+
+            const checks = result.checks;
+
+            // Специальный баннер при потере доверия к эмитенту:
+            // подпись может быть валидной, но эмитент удалён из реестра (компрометация / ротация).
+            const issuerRemovedBanner = (!checks.issuerTrusted && checks.signature) ? `
+                <div class="mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg flex items-start gap-2">
+                    <svg class="h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                    </svg>
+                    <div>
+                        <p class="text-sm font-medium text-orange-800">Эмитент исключён из доверенного реестра</p>
+                        <p class="text-xs text-orange-700 mt-0.5">
+                            Подпись криптографически верна, но эмитент больше не входит в реестр доверенных организаций.
+                            Это может означать компрометацию ключа эмитента или его плановое удаление.
+                            Credential не может считаться доверенным.
+                        </p>
+                    </div>
+                </div>` : '';
+
+            detailsElement.innerHTML = `
+                ${issuerRemovedBanner}
+                <div class="space-y-2">
+                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Проверки</h3>
+                    <div class="rounded-lg border border-gray-200 divide-y divide-gray-100">
+                        <div class="flex items-center justify-between px-4 py-2">
+                            <span class="text-sm text-gray-700">Подпись эмитента</span>
+                            ${checkIcon(checks.signature)}
+                        </div>
+                        <div class="flex items-center justify-between px-4 py-2">
+                            <span class="text-sm text-gray-700">Эмитент в реестре доверенных</span>
+                            ${checkIcon(checks.issuerTrusted)}
+                        </div>
+                        <div class="flex items-center justify-between px-4 py-2">
+                            <span class="text-sm text-gray-700">Credential не отозван</span>
+                            ${checkIcon(checks.notRevoked)}
+                        </div>
+                        <div class="flex items-center justify-between px-4 py-2">
+                            <span class="text-sm text-gray-700">Срок действия не истёк</span>
+                            ${checkIcon(checks.notExpired)}
+                        </div>
+                        <div class="flex items-center justify-between px-4 py-2">
+                            <span class="text-sm text-gray-700">SHA-256 PDF совпадает с VC</span>
+                            ${checkIcon(checks.fileHash)}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2 mt-4">
+                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Данные из VC (off-chain)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <p class="text-xs text-gray-500">Студент</p>
+                            <p class="text-sm font-medium">${cs.studentName || '—'}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Номер документа</p>
+                            <p class="text-sm font-medium">${cs.documentNumber || '—'}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Учреждение</p>
+                            <p class="text-sm font-medium">${cs.institution || '—'}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Степень</p>
+                            <p class="text-sm font-medium">${cs.degree || '—'}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Дата выдачи</p>
+                            <p class="text-sm font-medium">${cs.issueDate || '—'}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Действителен до</p>
+                            <p class="text-sm font-medium">${validUntil}</p>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <p class="text-xs text-gray-500">Эмитент (DID)</p>
+                        <p class="hash-display text-xs text-gray-700 break-all">${issuerDID}</p>
+                    </div>
+                    <div class="mt-1">
+                        <p class="text-xs text-gray-500">Держатель (DID)</p>
+                        <p class="hash-display text-xs text-gray-700 break-all">${holderDID}</p>
+                    </div>
+                    <div class="mt-1">
+                        <p class="text-xs text-gray-500">Credential ID</p>
+                        <p class="hash-display text-xs text-gray-700 break-all">${result.credentialId || vc.id || '—'}</p>
+                    </div>
+                </div>
+
+                ${result.error ? `<div class="mt-3 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">Ошибка: ${result.error}</div>` : ''}
+
+                <div class="mt-4 p-3 ${allOk ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'} rounded-md">
+                    <p class="text-sm ${allOk ? 'text-green-700' : 'text-red-700'}">
+                        ${allOk
+                    ? 'VC прошёл все проверки. Документ является действительным.'
+                    : 'VC не прошёл одну или несколько проверок. Документ не является действительным.'}
+                    </p>
+                </div>
+            `;
+
+            resultSection.classList.remove('hidden');
+        }
+
+        // Верификация VC (заменяет verifyDocument)
+        async function verifyDocumentVC() {
+            if (!currentVCForVerification) {
+                showNotification('Загрузите файл VC (JSON).', 'warning');
+                return;
+            }
             if (!verifyDocumentHash) {
-                showNotification('Пожалуйста, загрузите PDF-файл.', 'warning');
+                showNotification('Загрузите PDF-документ.', 'warning');
                 return;
             }
 
-            // Проверяем, инициализирован ли контракт
-            if (!contract) {
-                showNotification('Кошелек не подключен. Пожалуйста, подключите MetaMask.', 'error');
-                hideTransactionStatus();
+            const pdfFile = document.getElementById('verify-file').files[0];
+            if (!pdfFile) {
+                showNotification('PDF файл не найден.', 'warning');
                 return;
             }
 
-            // Показываем статус проверки
-            showTransactionStatus('Проверка документа в блокчейне...');
+            showTransactionStatus('Проверяю VC...');
 
             try {
-                // Вызываем функцию verifyDocument с таймаутом
-                const verifyPromise = contract.verifyDocument(verifyDocumentHash);
-                const timeoutPromise = new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('Проверка документа заняла слишком много времени. Проверьте интернет-соединение.')), 30000)
+                // Используем read-only RPC provider (не нужен MetaMask для верификации)
+                const rpcProvider = await getWorkingJsonRpcProvider();
+                const readContract = new ethers.Contract(contractAddress, contractABI, rpcProvider);
+
+                const result = await VCVerify.verifyVC(
+                    currentVCForVerification,
+                    pdfFile,
+                    readContract
                 );
 
-                const result = await Promise.race([verifyPromise, timeoutPromise]);
-
-                const [exists, issuer, metadata, timestamp, isActive] = result;
-
-                // Скрываем статус транзакции
                 hideTransactionStatus();
+                showVerificationResult(currentVCForVerification, result);
 
-                // Отображаем результат
-                const resultSection = document.getElementById('verification-result');
-                const statusElement = document.getElementById('verification-status');
-                const titleElement = document.getElementById('verification-title');
-                const detailsElement = document.getElementById('verification-details');
-
-                if (!exists) {
-                    statusElement.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-revoked';
-                    statusElement.textContent = 'Не найден';
-                    titleElement.textContent = 'Документ не найден в реестре';
-                    titleElement.className = 'text-2xl font-bold text-red-600';
-                    detailsElement.innerHTML = `
-                        <p class="text-gray-700">Документ с указанным хешем не найден в децентрализованном реестре.</p>
-                        <p class="text-gray-500 text-sm mt-2">Хеш документа: <span class="hash-display">${verifyDocumentHash}</span></p>
-                    `;
-                } else if (!isActive) {
-                    statusElement.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-revoked';
-                    statusElement.textContent = 'Отозван';
-                    titleElement.textContent = 'Документ отозван';
-                    titleElement.className = 'text-2xl font-bold text-yellow-600';
-
-                    // Парсим метаданные
-                    let metadataObj = {};
-                    try {
-                        metadataObj = JSON.parse(metadata);
-                    } catch (e) {
-                        console.error('Ошибка парсинга метаданных:', e);
-                    }
-
-                    const formattedDate = new Date(Number(timestamp) * 1000).toLocaleString('ru-RU', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-
-                    detailsElement.innerHTML = `
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <p class="text-sm text-gray-500">Имя студента</p>
-                                <p class="font-medium">${metadataObj.studentName || 'Не указано'}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Номер документа</p>
-                                <p class="font-medium">${metadataObj.documentNumber || 'Не указано'}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Учебное заведение</p>
-                                <p class="font-medium">${metadataObj.institution || 'Не указано'}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Дата выдачи</p>
-                                <p class="font-medium">${metadataObj.issueDate || 'Не указано'}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Дата регистрации</p>
-                                <p class="font-medium">${formattedDate}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Эмитент</p>
-                                <p class="font-medium hash-display">${issuer}</p>
-                            </div>
-                        </div>
-                        <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
-                            <p class="text-sm text-yellow-800">Этот документ был отозван эмитентом и не является действительным.</p>
-                        </div>
-                    `;
-                } else {
-                    statusElement.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-active';
-                    statusElement.textContent = 'Активен';
-                    titleElement.textContent = 'Документ подлинный';
-                    titleElement.className = 'text-2xl font-bold text-green-600';
-
-                    // Парсим метаданные
-                    let metadataObj = {};
-                    try {
-                        metadataObj = JSON.parse(metadata);
-                    } catch (e) {
-                        console.error('Ошибка парсинга метаданных:', e);
-                    }
-
-                    const formattedDate = new Date(Number(timestamp) * 1000).toLocaleString('ru-RU', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-
-                    detailsElement.innerHTML = `
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <p class="text-sm text-gray-500">Имя студента</p>
-                                <p class="font-medium">${metadataObj.studentName || 'Не указано'}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Номер документа</p>
-                                <p class="font-medium">${metadataObj.documentNumber || 'Не указано'}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Учебное заведение</p>
-                                <p class="font-medium">${metadataObj.institution || 'Не указано'}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Дата выдачи</p>
-                                <p class="font-medium">${metadataObj.issueDate || 'Не указано'}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Дата регистрации</p>
-                                <p class="font-medium">${formattedDate}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Эмитент</p>
-                                <p class="font-medium hash-display">${issuer}</p>
-                            </div>
-                        </div>
-                        <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
-                            <p class="text-sm text-green-700">Этот документ зарегистрирован в децентрализованном реестре и является действительным.</p>
-                        </div>
-                    `;
-                }
-
-                resultSection.classList.remove('hidden');
             } catch (error) {
-                console.error('Ошибка проверки документа:', error);
+                console.error('Ошибка верификации VC:', error);
                 hideTransactionStatus();
 
-                const resultSection = document.getElementById('verification-result');
-                const statusElement = document.getElementById('verification-status');
-                const titleElement = document.getElementById('verification-title');
-                const detailsElement = document.getElementById('verification-details');
+                document.getElementById('verification-status').className =
+                    'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-revoked';
+                document.getElementById('verification-status').textContent = 'Ошибка';
+                document.getElementById('verification-title').textContent = 'Ошибка при проверке';
+                document.getElementById('verification-title').className = 'text-2xl font-bold text-red-600';
+                document.getElementById('verification-details').innerHTML =
+                    `<p class="text-red-600 text-sm">${error.message}</p>`;
+                document.getElementById('verification-result').classList.remove('hidden');
+            }
+        }
 
-                statusElement.className = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium status-revoked';
-                statusElement.textContent = 'Ошибка';
-                titleElement.textContent = 'Ошибка проверки документа';
-                titleElement.className = 'text-2xl font-bold text-red-600';
-                detailsElement.innerHTML = `
-                    <p class="text-gray-700">Произошла ошибка при проверке документа в блокчейне.</p>
-                    <p class="text-gray-500 text-sm mt-2">Хеш документа: <span class="hash-display">${verifyDocumentHash}</span></p>
-                    <p class="text-red-600 mt-2">Ошибка: ${error.message}</p>
-                `;
+        // Экстренный отзыв credential владельцем контракта (admin-panel).
+        // Читает credentialId из #admin-revoke-credential-id — отдельный input, не конфликтует
+        // с формой эмитента.
+        async function ownerRevokeCredential() {
+            const credId = (document.getElementById('admin-revoke-credential-id')?.value || '').trim();
 
-                resultSection.classList.remove('hidden');
+            if (!credId.match(/^0x[0-9a-fA-F]{64}$/)) {
+                showNotification('Введите корректный Credential ID (0x + 64 hex символа).', 'warning');
+                return;
+            }
+            if (!isConnected || !contract) {
+                showNotification('Подключите MetaMask.', 'warning');
+                return;
+            }
+            if (!confirm(
+                `ЭКСТРЕННЫЙ ОТЗЫВ (owner)\n\nCredential ID:\n${credId}\n\n` +
+                `Это действие необратимо. Продолжить?`
+            )) {
+                return;
+            }
+
+            setEtherscanLink(null);
+            showTransactionStatus('Экстренный отзыв credential...');
+
+            try {
+                const tx = await contract.revokeCredential(credId);
+                setEtherscanLink(tx.hash);
+                showTransactionStatus('Ожидание подтверждения...');
+                await tx.wait();
+
+                showTransactionStatus('Credential отозван!', 'success');
+                const el = document.getElementById('admin-revoke-credential-id');
+                if (el) el.value = '';
+            } catch (error) {
+                console.error('Ошибка экстренного отзыва:', error);
+                let msg = 'Не удалось отозвать credential.';
+                if (error.message?.includes('user rejected') || error.code === 4001) {
+                    msg = 'Вы отменили транзакцию.';
+                } else if (error.message?.includes('Already revoked')) {
+                    msg = 'Credential уже отозван.';
+                } else if (error.message?.includes('Credential not found')) {
+                    msg = 'Credential не найден в реестре.';
+                } else if (error.message?.includes('Not issuer or owner')) {
+                    msg = 'Только owner контракта может использовать экстренный отзыв.';
+                }
+                showTransactionStatus(msg, 'error');
+            }
+        }
+
+        // Отзыв credential (вызывается эмитентом из вкладки "Для эмитента")
+        async function revokeCredential() {
+            const credId = (document.getElementById('revoke-credential-id')?.value || '').trim();
+
+            if (!credId.match(/^0x[0-9a-fA-F]{64}$/)) {
+                showNotification('Введите корректный Credential ID (0x + 64 hex символа).', 'warning');
+                return;
+            }
+            if (!isConnected || !contract) {
+                showNotification('Подключите MetaMask.', 'warning');
+                return;
+            }
+            if (!confirm(`Отозвать credential?\n\n${credId}\n\nЭто действие необратимо.`)) {
+                return;
+            }
+
+            setEtherscanLink(null);
+            showTransactionStatus('Отзываю credential...');
+
+            try {
+                const tx = await contract.revokeCredential(credId);
+
+                setEtherscanLink(tx.hash);
+                showTransactionStatus('Ожидание подтверждения...');
+                await tx.wait();
+
+                showTransactionStatus('Credential отозван!', 'success');
+                if (document.getElementById('revoke-credential-id')) {
+                    document.getElementById('revoke-credential-id').value = '';
+                }
+            } catch (error) {
+                console.error('Ошибка отзыва:', error);
+                let msg = 'Не удалось отозвать credential.';
+                if (error.message?.includes('user rejected') || error.code === 4001) {
+                    msg = 'Вы отменили транзакцию.';
+                } else if (error.message?.includes('Not issuer or owner')) {
+                    msg = 'Вы не являетесь эмитентом этого credential и не являетесь владельцем контракта.';
+                } else if (error.message?.includes('Not the issuer')) {
+                    msg = 'Вы не являетесь эмитентом этого credential.';
+                } else if (error.message?.includes('Already revoked')) {
+                    msg = 'Credential уже отозван.';
+                } else if (error.message?.includes('Credential not found')) {
+                    msg = 'Credential не найден в реестре.';
+                }
+                showTransactionStatus(msg, 'error');
             }
         }
 
@@ -2146,26 +2821,20 @@
                 return;
             }
 
-            // Показываем статус транзакции
+            setEtherscanLink(null);
             showTransactionStatus('Отправка транзакции добавления эмитента...');
 
             try {
                 // Отправляем транзакцию
                 const tx = await contract.addIssuer(newIssuerAddress);
 
-                // Показываем хеш транзакции и ссылку на Etherscan
-                const etherscanLink = `https://sepolia.etherscan.io/tx/${tx.hash}`;
-                document.getElementById('etherscan-link').href = etherscanLink;
-                document.getElementById('etherscan-link').classList.remove('hidden');
-
-                // Ожидаем подтверждения
+                // Фиксируем ссылку на tx и показываем статус ожидания
+                setEtherscanLink(tx.hash);
                 showTransactionStatus('Ожидание подтверждения транзакции...');
                 await tx.wait();
 
-                // Успех
+                // Успех (ссылка сохранена в _txEtherscanUrl, showTransactionStatus добавит её сам)
                 showTransactionStatus('Эмитент успешно добавлен!', 'success');
-                document.getElementById('etherscan-link').href = etherscanLink;
-                document.getElementById('etherscan-link').classList.remove('hidden');
 
                 // Обновляем список эмитентов
                 loadIssuersList();
@@ -2255,13 +2924,14 @@
 
                         issuersHTML += `
                             <div class="bg-gray-50 p-4 rounded-lg flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="text-sm font-medium text-gray-900 hash-display">${issuer}</div>
+                                <div class="flex items-center gap-2">
+                                    <div class="text-sm font-medium text-gray-900">${renderHashBadge(issuer)}</div>
                                     ${roleBadge}
                                 </div>
                                 ${!isOwner ? `
-                                    <button data-address="${issuer}" class="remove-issuer-button text-red-600 hover:text-red-900 font-medium text-sm">
-                                        Удалить
+                                    <button data-address="${issuer}" title="Экстренное исключение из реестра"
+                                        class="remove-issuer-button text-orange-600 hover:text-orange-900 font-medium text-sm border border-orange-200 hover:border-orange-400 rounded px-2 py-1">
+                                        Исключить из реестра
                                     </button>
                                 ` : ''}
                             </div>
@@ -2291,30 +2961,30 @@
 
         // Удаление эмитента
         async function removeIssuer(issuerAddress) {
-            if (!confirm(`Вы действительно хотите удалить эмитента ${issuerAddress}?`)) {
+            if (!confirm(
+                `ВНИМАНИЕ: Это экстренное действие.\n\n` +
+                `Эмитент: ${issuerAddress}\n\n` +
+                `После исключения из реестра ВСЕ credential, выданные этим эмитентом, ` +
+                `немедленно перестанут проходить верификацию.\n\n` +
+                `Продолжить?`
+            )) {
                 return;
             }
 
-            // Показываем статус транзакции
+            setEtherscanLink(null);
             showTransactionStatus('Отправка транзакции удаления эмитента...');
 
             try {
                 // Отправляем транзакцию
                 const tx = await contract.removeIssuer(issuerAddress);
 
-                // Показываем хеш транзакции и ссылку на Etherscan
-                const etherscanLink = `https://sepolia.etherscan.io/tx/${tx.hash}`;
-                document.getElementById('etherscan-link').href = etherscanLink;
-                document.getElementById('etherscan-link').classList.remove('hidden');
-
-                // Ожидаем подтверждения
+                // Фиксируем ссылку на tx и показываем статус ожидания
+                setEtherscanLink(tx.hash);
                 showTransactionStatus('Ожидание подтверждения транзакции...');
                 await tx.wait();
 
-                // Успех
+                // Успех (ссылка сохранена в _txEtherscanUrl)
                 showTransactionStatus('Эмитент успешно удален!', 'success');
-                document.getElementById('etherscan-link').href = etherscanLink;
-                document.getElementById('etherscan-link').classList.remove('hidden');
 
                 // Обновляем список эмитентов
                 loadIssuersList();
@@ -2419,6 +3089,14 @@
             }
         }
 
+        // Установить/сбросить ссылку на Etherscan для текущей транзакции.
+        // После вызова showTransactionStatus автоматически включит её в render.
+        function setEtherscanLink(txHash) {
+            _txEtherscanUrl = txHash
+                ? 'https://sepolia.etherscan.io/tx/' + txHash
+                : '';
+        }
+
         // Показать статус транзакции
         function showTransactionStatus(message, status = 'pending') {
             const transactionStatus = document.getElementById('transaction-status');
@@ -2439,17 +3117,17 @@
             // Обновляем HTML содержимое с иконкой в зависимости от статуса
             let icon = '';
             if (status === 'pending') {
-                icon = '<div class="spinner-container"><div class="loading-spinner"></div></div>';
+                icon = '<div class="spinner-container mr-3"><div class="loading-spinner"></div></div>';
             } else if (status === 'success') {
-                icon = '<svg class="check-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+                icon = '<svg class="h-5 w-5 text-green-500 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+            } else if (status === 'error') {
+                icon = '<svg class="h-5 w-5 text-red-500 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
             }
 
-            // Безопасно получаем ссылку на Etherscan
-            const etherscanLink = document.getElementById('etherscan-link');
-            let etherscanHtml = '';
-            if (etherscanLink && etherscanLink.href && !etherscanLink.classList.contains('hidden')) {
-                etherscanHtml = `<a href="${etherscanLink.href}" target="_blank" class="text-sm text-blue-600 hover:text-blue-800">Посмотреть в Etherscan</a>`;
-            }
+            // Ссылка на Etherscan — берём из модульной переменной, не из DOM
+            const etherscanHtml = _txEtherscanUrl
+                ? `<a href="${_txEtherscanUrl}" target="_blank" class="text-sm text-blue-600 hover:text-blue-800">Посмотреть в Etherscan</a>`
+                : '';
 
             transactionStatus.innerHTML = `
                 <div class="flex items-center">
